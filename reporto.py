@@ -6,18 +6,20 @@ def checkerror():
     error = ''
     if rpnum_text.get('1.0', 'end').split('\n')[0] == '':
         error += 'RP#\n'
-    if rp.get() == False or rp.get() == False or nrp.get() == False or rt.get() == False or kj.get() == False:
+    if rp.get() == False and nrp.get() == False and rt.get() == False and kj.get() == False:
         error += 'Result\n'
     if bhotswap.get() == False and bvibration.get() == False and bnoise.get() == False and bheat.get() == False and \
-        bnff.get() == False:
+        bnff.get() == False and bcable.get() == False:
         error += 'Prevenative Measure\n'
-    if c_appearance_text.get('1.0', 'end').split('\n')[0] == '' and bnofaults.get() == False:
+    if bapp_nff.get() == False and bapp_oil.get() == False and bapp_impact.get() == False and bapp_cable.get() == False:
         error += 'Appearance Check\n'
+    if pic_text.get('1.0', 'end').split('\n')[0] == '':
+        error += 'PIC\n'
     warning(error)
     return None
 
 def suspected_cause():
-    str_out = ''
+    str_out = 'The suspected cause of failure is likely due to'
     if bhotswap.get() == True:
         str_out += ', electrical component damage due to hot swap'
     if bvibration.get() == True:
@@ -26,11 +28,30 @@ def suspected_cause():
         str_out += ', electrical component damage due to inductive noise'
     if bheat.get() == True:
         str_out += ', internal component damage due to heat'
+    if bcable.get() == True:
+        str_out += ', cable damage due to impact or improper use of the cable'
     if bnff.get() == True:
-        str_out += 'No faults were found.'
+        str_out = 'No faults were found'
     else:
         pass
-    return str_out
+    return str_out + '.'
+
+def internal_check():
+    str_out = ''
+    if structure_text.get('1.0', 'end').split('\n')[0] != '' or fb_text.get('1.0', 'end').split('\n')[0] != '' \
+            or comp_text.get('1.0', 'end').split('\n')[0] != '':
+        str_out += ' The unit was disassembled and it was determined that'
+        comp = comp_text.get('1.0', 'end').split('\n')[0].lower()
+        struct = structure_text.get('1.0', 'end').split('\n')[0].lower()
+        if comp_text.get('1.0', 'end').split('\n')[0] != '':
+            str_out += ', an internal electrical component was found damaged'
+        if fb_text.get('1.0', 'end').split('\n')[0] != '':
+            str_out += f', the {comp} was found damaged'
+        if structure_text.get('1.0', 'end').split('\n')[0] != '':
+            str_out += f', the {struct} was found damaged'
+    else:
+        str_out += 'There was no need to disassemble the unit'
+    return str_out + '.'
 
 def preventative_measure():
     str_out = ''
@@ -45,11 +66,47 @@ def preventative_measure():
                    'machinery that can cause electrical noise. '
     if bheat.get() == True:
         str_out += 'To prevent damage from heat, please make sure to provide proper air flow to keep the unit cool. '
+    if bcable.get() == True:
+        str_out += 'To prevent cable damage, please make sure to protect the cable from impact and pulling. '
     if bnff.get() == True:
-        str_out += 'No faults were found.'
+        str_out += 'No faults were found'
     else:
         pass
     return str_out
+
+def apperance_check():
+    str_out = ''
+
+    if bapp_nff.get() == True:
+        str_out += ', there were no major damage to the exterior of the unit'
+    if bapp_cable.get() == True:
+        str_out += ', the external cable was found damaged'
+    if bapp_impact.get() == True:
+        str_out += ', the external case was found with impact damage'
+    if bapp_oil.get() == True:
+        str_out += ', the external case was found with oil'
+    return str_out
+
+def operation_check():
+    str_out = 'With an operation check, '
+
+    if bsym_nocom.get() == True or bsym_nolaser.get() == True or bsym_nopower.get() == True or bsym_noint.get() == True\
+            or bsym_cable.get() == True:
+        str_out += 'the symptom was replicated'
+        if bsym_nocom.get() == True:
+            str_out += ', the communication was abnormal'
+        if bsym_nolaser.get() == True:
+            str_out += ', the unit was not emitting a laser'
+        if bsym_nopower.get() == True:
+            str_out += ', the unit was not accepting power'
+        if bsym_noint.get() == True:
+            str_out += ', the unit would not initialize properly'
+        if bsym_cable.get() == True:
+            str_out = 'With an operation check, a known good cable was replaced in order to conduct a full function check'
+    else:
+        str_out += 'the symptom was not replicated, the unit passed a full function test'
+
+    return str_out + '.'
 
 def makeform():
     rp_save = rpnum_text.get('1.0', 'end').split('\n')[0].strip()
@@ -58,13 +115,12 @@ def makeform():
     pdf.add_page()
     sum_out = ''
     count = 0
-    error = ''
 
-    if rpnum_text.get('1.0', 'end').split('\n')[0] == '' or rp.get() == False or \
-            pic_text.get('1.0', 'end').split('\n')[0] == '' or rp.get() == False and nrp.get() == False and \
-            rt.get() == False and kj.get() == False or bhotswap.get() == False and bvibration.get() == False and \
-            bnoise.get() == False and bheat.get() == False and bnff.get() == False or \
-            c_appearance_text.get('1.0', 'end').split('\n')[0] == '' and bnofaults.get() == False:
+    if rpnum_text.get('1.0', 'end').split('\n')[0] == '' or pic_text.get('1.0', 'end').split('\n')[0] == '' or \
+            rp.get() == False and nrp.get() == False and rt.get() == False and kj.get() == False or \
+            bhotswap.get() == False and bvibration.get() == False and \
+            bnoise.get() == False and bheat.get() == False and bnff.get() == False and bcable.get() == False or \
+            bapp_nff.get() == False and bapp_oil.get() == False and bapp_impact.get() == False and bapp_cable.get() == False:
         checkerror()
         return None
     else:
@@ -131,39 +187,24 @@ def makeform():
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Appearance Check > ', ln=1)
     pdf.set_font('Arial', '', 12)
-    if bnofaults.get() == True:
-        pdf.cell(40, 10, 'With a visual inspection, there were no major damage to the exterior of the unit.', ln=1)
-    else:
-        pdf.cell(40, 10, 'With a visual inspection, ' + c_appearance_text.get('1.0', 'end').lower(), ln=1)
+    pdf.multi_cell(175, 10, 'With a visual inspection' + apperance_check())
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Operation Check > ', ln=1)
     pdf.set_font('Arial', '', 12)
-    if c_tests_text.get('1.0', 'end') == '':
-        if breplicated.get() == True:
-            pdf.multi_cell(175, 10, 'With an operation check, the symptom was replicated.')
-        else:
-            pdf.multi_cell(175, 10, 'With an operation check, '
-                                    'the symptom was not replicated.' + c_symptom_text.get('1.0', 'end').capitalize())
-    else:
-        if breplicated.get() == True:
-            pdf.multi_cell(175, 10, 'With an operation check, the symptom was replicated. '
-                                    '' + c_symptom_text.get('1.0', 'end').capitalize() + c_tests_text.get('1.0', 'end').capitalize())
-        else:
-            pdf.multi_cell(175, 10, 'With an operation check, the symptom was not replicated.' + c_symptom_text.get('1.0', 'end').capitalize() + c_tests_text.get('1.0', 'end').capitalize())
+
+    pdf.multi_cell(175, 10, operation_check())
+
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Internal Check > ', ln=1)
     pdf.set_font('Arial', '', 12)
-    if bdisassembled == True:
-        pdf.multi_cell(175, 10, 'This unit was disassembled and an internal inspection was conducted.'
-                                '' + c_disassembly_text.get('1.0', 'end'))
-    else:
-        pdf.multi_cell(175, 10, 'There was no reason to disassemble the unit.')
+
+    pdf.multi_cell(175, 10, internal_check())
 
     pdf.set_font('Arial', '', 14)
 
     pdf.cell(40, 10, '< Suspected Cause > ', ln=1)
     pdf.set_font('Arial', '', 12)
-    pdf.multi_cell(175, 10, 'The suspected cause of failure is likely due to' + suspected_cause() + '.')
+    pdf.multi_cell(175, 10, suspected_cause())
 
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Conclusion > ', ln=1)
@@ -184,8 +225,8 @@ def makeform():
     pdf.set_font('Arial', '', 12)
     pdf.multi_cell(175, 10, preventative_measure())
 
-    # pdf.output('I:/PRD/Check Sheets/RSS/' + rp_save + ' - ' + serial_save + '.pdf', 'F')
-    pdf.output(rp_save + ' - ' + serial_save + '.pdf', 'F')
+    pdf.output('I:/PRD/Check Sheets/RSS/' + rp_save + ' - ' + serial_save + '.pdf', 'F')
+    # pdf.output(rp_save + ' - ' + serial_save + '.pdf', 'F')
     rpnum_text.delete('1.0', 'end')
     serial_text.delete('1.0', 'end')
     key_text.delete('1.0', 'end')
@@ -206,7 +247,7 @@ def warning(wrds):
 root = tk.Tk()
 w, h = root.winfo_screenwidth(), root.winfo_screenheight()
 # root.geometry("%dx%d+0+0" % (w, h))
-root.geometry('1225x500')
+root.geometry('1250x600')
 root.title('RSS Generator')
 
 rpnum_label = tk.Label(text='RP#')
@@ -267,10 +308,22 @@ bhotswap = tk.BooleanVar()
 bvibration = tk.BooleanVar()
 bnoise = tk.BooleanVar()
 bheat = tk.BooleanVar()
-bnofaults = tk.BooleanVar()
+bapp_nff = tk.BooleanVar()
 breplicated = tk.BooleanVar()
 bdisassembled = tk.BooleanVar()
 bnff = tk.BooleanVar()
+bcable = tk.BooleanVar()
+bapp_cable = tk.BooleanVar()
+bapp_impact = tk.BooleanVar()
+bapp_oil = tk.BooleanVar()
+bsym_nopower = tk.BooleanVar()
+bsym_noint = tk.BooleanVar()
+bsym_nocom = tk.BooleanVar()
+bsym_nolaser = tk.BooleanVar()
+btest_runtest = tk.BooleanVar()
+btest_fftest = tk.BooleanVar()
+bsym_symnff = tk.BooleanVar()
+bsym_cable = tk.BooleanVar()
 
 key_label = tk.Label(text='Result')
 key_label.grid(row=1, column=4)
@@ -295,7 +348,7 @@ kjchk_label = tk.Checkbutton(root, text="Sent to KJ",
                              width=10, variable=kj)
 kjchk_label.grid(row=5, column=4)
 
-key_label = tk.Label(text=' Preventative Measures ')
+key_label = tk.Label(text=' Suspected Cause/Preventative Measures ')
 key_label.grid(row=1, column=5)
 
 hot_swap = tk.Checkbutton(root, text="Hot Swap",
@@ -318,11 +371,97 @@ heat = tk.Checkbutton(root, text="Heat",
                       width=10, variable=bheat)
 heat.grid(row=5, column=5)
 
+cable = tk.Checkbutton(root, text="Cable Damage",
+                      onvalue=1, offvalue=0, height=1,
+                      width=10, variable=bcable)
+cable.grid(row=6, column=5)
+
 nff = tk.Checkbutton(root, text="NFF",
                       onvalue=1, offvalue=0, height=1,
                       width=10, variable=bnff)
-nff.grid(row=6, column=5)
+nff.grid(row=7, column=5)
 
+key_label = tk.Label(text='Appearance Quick Menu')
+key_label.grid(row=13, column=1)
+
+app_cable = tk.Checkbutton(root, text="Cable Damage",
+                           onvalue=1, offvalue=0, height=1,
+                           width=25, variable=bapp_cable)
+app_cable.grid(row=14, column=1)
+
+app_impact = tk.Checkbutton(root, text="Impact Damage",
+                           onvalue=1, offvalue=0, height=1,
+                           width=25, variable=bapp_impact)
+app_impact.grid(row=15, column=1)
+
+app_oil = tk.Checkbutton(root, text="Oil",
+                           onvalue=1, offvalue=0, height=1,
+                           width=25, variable=bapp_oil)
+app_oil.grid(row=16, column=1)
+
+app_nff = tk.Checkbutton(root, text="NFF",
+                           onvalue=1, offvalue=0, height=1,
+                           width=25, variable=bapp_nff)
+app_nff.grid(row=17, column=1)
+
+key_label = tk.Label(text='Symptom Quick Menu')
+key_label.grid(row=13, column=2)
+
+nopower = tk.Checkbutton(root, text="No Power",
+                            onvalue=1, offvalue=0, height=1,
+                            width=25, variable=bsym_nopower)
+nopower.grid(row=14, column=2)
+
+nolaser = tk.Checkbutton(root, text="No Laser",
+                            onvalue=1, offvalue=0, height=1,
+                            width=25, variable=bsym_nolaser)
+nolaser.grid(row=15, column=2)
+
+noint = tk.Checkbutton(root, text="No Initialization",
+                            onvalue=1, offvalue=0, height=1,
+                            width=25, variable=bsym_noint)
+noint.grid(row=16, column=2)
+
+nocom = tk.Checkbutton(root, text="No Communication",
+                            onvalue=1, offvalue=0, height=1,
+                            width=25, variable=bsym_nocom)
+nocom.grid(row=17, column=2)
+
+symnff = tk.Checkbutton(root, text="NFF",
+                            onvalue=1, offvalue=0, height=1,
+                            width=25, variable=bsym_symnff)
+symnff.grid(row=19, column=2)
+
+sym_cable = tk.Checkbutton(root, text="Cable Damage",
+                            onvalue=1, offvalue=0, height=1,
+                            width=25, variable=bsym_cable)
+sym_cable.grid(row=18, column=2)
+
+# key_label = tk.Label(text='Testing Quick Menu')
+# key_label.grid(row=13, column=3)
+#
+# runtest = tk.Checkbutton(root, text="Run Test",
+#                            onvalue=1, offvalue=0, height=1,
+#                            width=25, variable=btest_runtest)
+# runtest.grid(row=14, column=3)
+#
+# fftest = tk.Checkbutton(root, text="Full Function Test",
+#                            onvalue=1, offvalue=0, height=1,
+#                            width=25, variable=btest_fftest)
+# fftest.grid(row=14, column=3)
+#
+# fftest = tk.Checkbutton(root, text="Full Function Test",
+#                            onvalue=1, offvalue=0, height=1,
+#                            width=25, variable=btest_fftest)
+# fftest.grid(row=14, column=3)
+
+# key_label = tk.Label(text='Quick Menu')
+# key_label.grid(row=13, column=4)
+#
+# disassembled = tk.Checkbutton(root, text="Was the unit disassembled?",
+#                               onvalue=1, offvalue=0, height=1,
+#                               width=25, variable=bdisassembled)
+# disassembled.grid(row=14, column=4)
 
 
 '''Form'''
@@ -360,44 +499,32 @@ failure_text.bind("<Tab>", focus_next_window)
 # quck_label = tk.Label(text=' Quick Answer ')
 # quck_label.grid(row=7, column=1)
 
-no_faults = tk.Checkbutton(root, text="Appearance NFF",
-                           onvalue=1, offvalue=0, height=1,
-                           width=25, variable=bnofaults)
-no_faults.grid(row=11, column=1)
 
-replicated = tk.Checkbutton(root, text="Was the symptom replicated?",
-                            onvalue=1, offvalue=0, height=1,
-                            width=25, variable=breplicated)
-replicated.grid(row=11, column=2)
+# c_appearance = tk.Label(text='Appearance Inspection (for customer)', fg="red")
+# c_appearance.grid(row=11, column=1)
+# c_appearance_text = tk.Text(root, height=5, width=30)
+# c_appearance_text.grid(row=12, column=1)
+# c_appearance_text.bind("<Tab>", focus_next_window)
+#
+# c_symptom = tk.Label(text='Symptom Information (for customer)', fg="red")
+# c_symptom.grid(row=11, column=2)
+# c_symptom_text = tk.Text(root, height=5, width=30)
+# c_symptom_text.grid(row=12, column=2)
+# c_symptom_text.bind("<Tab>", focus_next_window)
 
-disassembled = tk.Checkbutton(root, text="Was the unit disassembled?",
-                              onvalue=1, offvalue=0, height=1,
-                              width=25, variable=bdisassembled)
-disassembled.grid(row=11, column=4)
+# c_tests = tk.Label(text='Tests Performed (for customer)', fg="red")
+# c_tests.grid(row=11, column=3)
+# c_tests_text = tk.Text(root, height=5, width=30)
+# c_tests_text.grid(row=12, column=3)
+# c_tests_text.bind("<Tab>", focus_next_window)
 
-c_appearance = tk.Label(text='Appearance Inspection (for customer)', fg="red")
-c_appearance.grid(row=12, column=1)
-c_appearance_text = tk.Text(root, height=5, width=30)
-c_appearance_text.grid(row=13, column=1)
-c_appearance_text.bind("<Tab>", focus_next_window)
+# c_disassembly = tk.Label(text='Disassembly (for customer)', fg="red")
+# c_disassembly.grid(row=11, column=4)
+# c_disassembly_text = tk.Text(root, height=5, width=30)
+# c_disassembly_text.grid(row=12, column=4)
+# c_disassembly_text.bind("<Tab>", focus_next_window)
 
-c_symptom = tk.Label(text='Symptom Information (for customer)', fg="red")
-c_symptom.grid(row=12, column=2)
-c_symptom_text = tk.Text(root, height=5, width=30)
-c_symptom_text.grid(row=13, column=2)
-c_symptom_text.bind("<Tab>", focus_next_window)
 
-c_tests = tk.Label(text='Tests Performed (for customer)', fg="red")
-c_tests.grid(row=12, column=3)
-c_tests_text = tk.Text(root, height=5, width=30)
-c_tests_text.grid(row=13, column=3)
-c_tests_text.bind("<Tab>", focus_next_window)
-
-c_disassembly = tk.Label(text='Disassembly (for customer)', fg="red")
-c_disassembly.grid(row=12, column=4)
-c_disassembly_text = tk.Text(root, height=5, width=30)
-c_disassembly_text.grid(row=13, column=4)
-c_disassembly_text.bind("<Tab>", focus_next_window)
 
 # c_failure = tk.Label(text='Cause of Failure (for customer)', fg="red")
 # c_failure.grid(row=12, column=5)
