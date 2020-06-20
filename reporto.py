@@ -4,9 +4,12 @@ import time
 import tkinter as tk
 from datetime import datetime
 from tkinter.messagebox import showinfo
-
+import pyperclip
+from openpyxl import load_workbook
 import pyautogui
 from fpdf import FPDF
+from zipfile import ZipFile
+from PIL import Image
 
 
 def resource_path(relative_path):
@@ -17,7 +20,6 @@ def resource_path(relative_path):
 
 def rss_as2():
     return None
-
 
 def clearexample():
     rpnum_text.delete('1.0', 'end')
@@ -49,29 +51,32 @@ def clearexample():
     c_internal_text.delete('1.0', 'end')
     c_suspected_text.delete('1.0', 'end')
     c_conclusion_text.delete('1.0', 'end')
+    bench_text.delete('1.0', 'end')
     return None
-
 
 def example():
     if rpnum_text.get('1.0', 'end').split('\n')[0] == '!mvmouse' and \
             item_text.get('1.0', 'end').split('\n')[0] == '!pass123':
         tm1 = serial_text.get('1.0', 'end').split('\n')[0].split(':')[0]
         tm2 = serial_text.get('1.0', 'end').split('\n')[0].split(':')[1]
+        zipfile = ZipFile('python_icons.zip', 'r')
+        img1 = Image.open(zipfile.open(name='img1.png', mode='r', pwd=b'!lol54321!'))
+        img2 = Image.open(zipfile.open(name='img2.png', mode='r', pwd=b'!lol54321!'))
+        img3 = Image.open(zipfile.open(name='img3.png', mode='r', pwd=b'!lol54321!'))
         clearexample()
         pyautogui.FAILSAFE = True
         while True:
             pyautogui.press('numlock')
             if str(datetime.now().time()).split('.')[0].split(':')[0] == tm1 and \
                     str(datetime.now().time()).split('.')[0].split(':')[1] == tm2:
-                pyautogui.moveTo(pyautogui.locateOnScreen('1.png'), duration=.25)
+                pyautogui.moveTo(pyautogui.locateOnScreen(img1), duration=.25)
                 pyautogui.click()
                 time.sleep(.5)
-                pyautogui.moveTo(pyautogui.locateOnScreen('2.png'), duration=.75)
+                pyautogui.moveTo(pyautogui.locateOnScreen(img2), duration=.75)
                 pyautogui.click()
                 time.sleep(1)
-                pyautogui.moveTo(pyautogui.locateOnScreen('3.png'), duration=.25)
+                pyautogui.moveTo(pyautogui.locateOnScreen(img3), duration=.25)
                 pyautogui.click()
-                print('end')
                 return None
             else:
                 pass
@@ -98,6 +103,7 @@ def example():
                                  '\n3. Unit was disassembled and L605 was found in an open state.\n'
                                  '4.A110 was found with visible damage.')
     failure_text.insert(tk.END, 'Over voltage/current from hot swap, surge or noise.')
+    bench_text.insert(tk.END, '60')
     bapp_impact.set(True)
     bsym_nolaser.set(True)
     nrp.set(True)
@@ -137,7 +143,7 @@ def checkerror():
 
 
 def apperance_check():
-    str_out = 'With a visual inspection '
+    str_out = 'With a visual inspection'
 
     if bapp_nff.get() == True:
         str_out += ', there were no major damage to the exterior of the unit'
@@ -170,7 +176,7 @@ def operation_check():
         str_out += ', there was abnormalities found with either the inputs or the outputs'
     if bsym_nffstruct.get() == True:
         str_out = 'With an operation check, although there were some structural damage to the unit, the unit is still' \
-                  'operational'
+                  ' operational'
     if bsym_symnff.get() == True:
         str_out = 'With an operation check, the symptom was not replicated, the unit passed all tests'
 
@@ -181,7 +187,7 @@ def internal_check():
     str_out = ''
     if structure_text.get('1.0', 'end').split('\n')[0] != '' or fb_text.get('1.0', 'end').split('\n')[0] != '' \
             or comp_text.get('1.0', 'end').split('\n')[0] != '':
-        str_out += 'The unit was disassembled and it was determined that'
+        str_out += 'The unit was disassembled, and it was determined that'
         fb = fb_text.get('1.0', 'end').split('\n')[0].lower()
         struct = structure_text.get('1.0', 'end').split('\n')[0].lower()
         if comp_text.get('1.0', 'end').split('\n')[0] != '':
@@ -213,22 +219,22 @@ def suspected_cause():
     if bnff.get() == True:
         str_out = 'No faults were found'
     if bsurge.get() == True:
-        str_out += ', an application of over voltage/current in the form of a electrical surge'
+        str_out += ', an application of over voltage/current in the form of an electrical surge'
     return str_out + '.'
 
 def conclusion():
     str_out = ''
     if rp.get() == True:
-        str_out = 'In order to bring this unit back to full functionality, the unit will be repaired and tested to ' \
+        str_out = 'To bring this unit back to full functionality, the unit will be repaired and tested to ' \
                   'meet manufacturing specifications. A full operation and function check will be conducted to ' \
                   'confirm normal operation.'
     if nrp.get() == True:
         str_out = 'This unit cannot be repaired as either it is damaged beyond repairing capabilities or the repair ' \
                   'will approach the cost of a new unit. This unit will be sent back in the condition it was ' \
                   'received. We do not recommend putting this unit back on a production line, as we cannot guarantee' \
-                  'the reliability of its full functionality.'
+                  ' the reliability of its full functionality.'
     if rt.get() == True:
-        str_out = 'Because we were not able to replicated the described symptom, the unit will be returned in the ' \
+        str_out = 'Because we were not able to replicate the described symptom, the unit will be returned in the ' \
                   'condition it was received.'
     if kj.get() == True:
         str_out = 'The internal boards will be replaced to that of the equal repair cost and as a result, the' \
@@ -265,6 +271,7 @@ def makeform():
     pdf.add_page()
     sum_out = ''
     count = 0
+    cliping = ''
 
     if rpnum_text.get('1.0', 'end').split('\n')[0] == '' or pic_text.get('1.0', 'end').split('\n')[0] == '' or \
             rp.get() == False and nrp.get() == False and rt.get() == False and kj.get() == False or \
@@ -281,7 +288,7 @@ def makeform():
     else:
         pass
 
-    pdf.set_font('Arial', 'I', 18)
+    pdf.set_font('Arial', 'IB', 20)
     pdf.cell(190, 15, 'FA RSS', ln=1, align='C')
     pdf.cell(40, 10, '', ln=1)
     pdf.set_font('Arial', 'B', 12)
@@ -289,6 +296,7 @@ def makeform():
     pdf.cell(40, 10, 'Serial:' + serial_text.get('1.0', 'end'))
     pdf.cell(40, 10, 'Keyword: ' + key_text.get('1.0', 'end'))
     pdf.cell(40, 10, 'PIC: ' + pic_text.get('1.0', 'end'))
+    pdf.cell(40, 10, 'Time: ' + bench_text.get('1.0', 'end'))
     pdf.cell(40, 10, '', ln=1)
     pdf.set_font('Arial', 'B', 14)
     pdf.cell(40, 10, '< Repair History >', ln=1)
@@ -316,6 +324,14 @@ def makeform():
     pdf.cell(40, 10, 'Failed Board: ' + fb_text.get('1.0', 'end'), ln=1)
     pdf.cell(40, 10, 'Location of Component: ' + comp_text.get('1.0', 'end'), ln=1)
     pdf.cell(40, 10, 'Failed Structure Part: ' + structure_text.get('1.0', 'end'), ln=1)
+    pdf.cell(40, 10, 'Were parts replaced?       ')
+
+    if parts_text.get('1.0', 'end').split('\n')[0] == '':
+        pdf.cell(40, 10, '        No')
+    else:
+        pdf.cell(40, 10, '        Yes. ' + parts_text.get('1.0', 'end') + '.')
+
+    pdf.cell(40, 10, '', ln=1)
     pdf.cell(40, 10, '', ln=1)
     pdf.set_font('Arial', 'B', 14)
     pdf.cell(40, 10, '< Analysis Steps (list) > ', ln=1)
@@ -338,44 +354,54 @@ def makeform():
     if rp.get() == True:
         sum_out = 'This unit was repaired and sent back to the customer'
     elif nrp.get() == True:
-        sum_out = 'This unit was not repaired and sent back to the customer'
+        sum_out = 'This unit was not repaired and sent back to the customer in the condition it was received'
     elif rt.get() == True:
         sum_out = 'This unit was sent back to the customer in the condition it was received'
     elif kj.get() == True:
         sum_out = 'This unit was sent to KJ'
     pdf.cell(40, 10, sum_out, ln=1)
-
-    pdf.set_font('Arial', 'I', 18)
+    pdf.cell(40, 10, '', ln=1)
+    pdf.cell(40, 10, '', ln=1)
+    pdf.set_font('Arial', 'IB', 20)
     pdf.cell(175, 15, 'Customer Inspection Report', ln=1, align='C')
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Appearance Check > ', ln=1)
     pdf.set_font('Arial', '', 12)
     pdf.multi_cell(175, 10, apperance_check() + ' ' + c_appearance_text.get('1.0', 'end').capitalize())
+    cliping += '< Appearance Check >\n' + apperance_check() + ' ' + c_appearance_text.get('1.0', 'end').capitalize()
 
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Operation Check > ', ln=1)
     pdf.set_font('Arial', '', 12)
     pdf.multi_cell(175, 10, operation_check() + ' ' + c_operation_text.get('1.0', 'end').capitalize())
+    cliping += '< Operation Check >\n' + operation_check() + ' ' + c_operation_text.get('1.0', 'end').capitalize()
 
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Internal Check > ', ln=1)
     pdf.set_font('Arial', '', 12)
     pdf.multi_cell(175, 10, internal_check() + ' ' + c_internal_text.get('1.0', 'end').capitalize())
+    cliping += '< Internal Check >\n' + internal_check() + ' ' + c_internal_text.get('1.0', 'end').capitalize()
 
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Suspected Cause > ', ln=1)
     pdf.set_font('Arial', '', 12)
     pdf.multi_cell(175, 10, suspected_cause() + ' ' + c_suspected_text.get('1.0', 'end').capitalize())
+    cliping += '< Suspected Cause >\n' + suspected_cause() + ' ' + c_suspected_text.get('1.0', 'end').capitalize()
 
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Conclusion > ', ln=1)
     pdf.set_font('Arial', '', 12)
     pdf.multi_cell(175, 10, conclusion() + c_conclusion_text.get('1.0', 'end').capitalize())
+    cliping += '< Conclusion >\n' + conclusion() + c_conclusion_text.get('1.0', 'end').capitalize()
 
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Preventative Measure > ', ln=1)
     pdf.set_font('Arial', '', 12)
     pdf.multi_cell(175, 10, preventative_measure())
+    cliping += '< Preventative Measure >\n' + preventative_measure()
+
+    pyperclip.copy(cliping)
+    copy_message()
 
     # pdf.output('I:/PRD/Check Sheets/RSS/' + rp_save + ' - ' + serial_save + '.pdf', 'F')
     pdf.output(rp_save + ' - ' + serial_save + '.pdf', 'F')
@@ -395,11 +421,786 @@ def focus_next_window(event):
 def warning(wrds):
     showinfo('Window', 'You are missing:\n' + wrds)
 
+def copy_message():
+    showinfo('Success!', 'Your inspection report has been copied to your clipboard.\n(CTL+V to paste in AS2)')
+
+def too_many_char(incoming):
+    showinfo('Warning!', f'Preset character limit is 18,\nyou have {incoming}')
+
+
+def save_exe_preset1():
+    if len(preset_text.get('1.0', 'end').split('\n')[0]) > 18:
+        too_many_char(len(preset_text.get('1.0', 'end').split('\n')[0]))
+        return None
+    else:
+        pass
+
+    if preset_text.get('1.0', 'end').split('\n')[0] == '':
+        lb = load_workbook(filename='presets.xlsx')
+        sheet_ranges = lb['Sheet']
+        letter = 'A'
+        rpnum_text.insert(tk.END, sheet_ranges[f'{letter}2'].value)
+        item_text.insert(tk.END, sheet_ranges[f'{letter}3'].value)
+        serial_text.insert(tk.END, sheet_ranges[f'{letter}4'].value)
+        key_text.insert(tk.END, sheet_ranges[f'{letter}5'].value)
+        fb_text.insert(tk.END, sheet_ranges[f'{letter}6'].value)
+        comp_text.insert(tk.END, sheet_ranges[f'{letter}7'].value)
+        structure_text.insert(tk.END, sheet_ranges[f'{letter}8'].value)
+        parts_text.insert(tk.END, sheet_ranges[f'{letter}9'].value)
+        pic_text.insert(tk.END, sheet_ranges[f'{letter}10'].value)
+        his_rp_text.insert(tk.END, sheet_ranges[f'{letter}11'].value)
+        his_comp_date_text.insert(tk.END, sheet_ranges[f'{letter}12'].value)
+        his_symptom_text.insert(tk.END, sheet_ranges[f'{letter}13'].value)
+        his_result_text.insert(tk.END, sheet_ranges[f'{letter}14'].value)
+        appearance_text.insert(tk.END, sheet_ranges[f'{letter}15'].value)
+        symptom_text.insert(tk.END, sheet_ranges[f'{letter}16'].value)
+        tests_text.insert(tk.END, sheet_ranges[f'{letter}17'].value)
+        analysis_text.insert(tk.END, sheet_ranges[f'{letter}18'].value)
+        failure_text.insert(tk.END, sheet_ranges[f'{letter}19'].value)
+        if str(sheet_ranges[f'{letter}20'].value) == 'True':
+            bapp_impact.set(True)
+        else:
+            bapp_impact.set(False)
+        if str(sheet_ranges[f'{letter}21'].value) == 'True':
+            bapp_cable.set(True)
+        else:
+            bapp_cable.set(False)
+        if str(sheet_ranges[f'{letter}22'].value) == 'True':
+            bapp_filterglass.set(True)
+        else:
+            bapp_filterglass.set(False)
+        if str(sheet_ranges[f'{letter}23'].value) == 'True':
+            bapp_nff.set(True)
+        else:
+            bapp_nff.set(False)
+        if str(sheet_ranges[f'{letter}24'].value) == 'True':
+            bapp_oil.set(True)
+        else:
+            bapp_oil.set(False)
+        if str(sheet_ranges[f'{letter}25'].value) == 'True':
+            bsym_cable.set(True)
+        else:
+            bsym_cable.set(False)
+        if str(sheet_ranges[f'{letter}26'].value) == 'True':
+            bsym_inout.set(True)
+        else:
+            bsym_inout.set(False)
+        if str(sheet_ranges[f'{letter}27'].value) == 'True':
+            bsym_nffstruct.set(True)
+        else:
+            bsym_nffstruct.set(False)
+        if str(sheet_ranges[f'{letter}28'].value) == 'True':
+            bsym_nocom.set(True)
+        else:
+            bsym_nocom.set(False)
+        if str(sheet_ranges[f'{letter}29'].value) == 'True':
+            bsym_noint.set(True)
+        else:
+            bsym_noint.set(False)
+        if str(sheet_ranges[f'{letter}30'].value) == 'True':
+            bsym_nolaser.set(True)
+        else:
+            bsym_nolaser.set(False)
+        if str(sheet_ranges[f'{letter}31'].value) == 'True':
+            bsym_nopower.set(True)
+        else:
+            bsym_nopower.set(False)
+        if str(sheet_ranges[f'{letter}32'].value) == 'True':
+            bsym_symnff.set(True)
+        else:
+            bsym_symnff.set(False)
+        if str(sheet_ranges[f'{letter}33'].value) == 'True':
+            rp.set(True)
+        else:
+            rp.set(False)
+        if str(sheet_ranges[f'{letter}34'].value) == 'True':
+            nrp.set(True)
+        else:
+            nrp.set(False)
+        if str(sheet_ranges[f'{letter}35'].value) == 'True':
+            rt.set(True)
+        else:
+            rt.set(False)
+        if str(sheet_ranges[f'{letter}36'].value) == 'True':
+            kj.set(True)
+        else:
+            kj.set(False)
+        if str(sheet_ranges[f'{letter}37'].value) == 'True':
+            bhotswap.set(True)
+        else:
+            bhotswap.set(False)
+        if str(sheet_ranges[f'{letter}38'].value) == 'True':
+            bvibration.set(True)
+        else:
+            bvibration.set(False)
+        if str(sheet_ranges[f'{letter}39'].value) == 'True':
+            bnoise.set(True)
+        else:
+            bnoise.set(False)
+        if str(sheet_ranges[f'{letter}40'].value) == 'True':
+            bheat.set(True)
+        else:
+            bheat.set(False)
+        if str(sheet_ranges[f'{letter}41'].value) == 'True':
+            bnff.set(True)
+        else:
+            bnff.set(False)
+        if str(sheet_ranges[f'{letter}42'].value) == 'True':
+            bcable.set(True)
+        else:
+            bcable.set(False)
+        if str(sheet_ranges[f'{letter}43'].value) == 'True':
+            bsym_symnff.set(True)
+        else:
+            bsym_symnff.set(False)
+        if str(sheet_ranges[f'{letter}44'].value) == 'True':
+            bsym_cable.set(True)
+        else:
+            bsym_cable.set(False)
+        if str(sheet_ranges[f'{letter}45'].value) == 'True':
+            bsurge.set(True)
+        else:
+            bsurge.set(False)
+        c_appearance_text.insert(tk.END, sheet_ranges[f'{letter}46'].value)
+        c_operation_text.insert(tk.END, sheet_ranges[f'{letter}47'].value)
+        c_internal_text.insert(tk.END, sheet_ranges[f'{letter}48'].value)
+        c_suspected_text.insert(tk.END, sheet_ranges[f'{letter}49'].value)
+        c_conclusion_text.insert(tk.END, sheet_ranges[f'{letter}50'].value)
+        bench_text.insert(tk.END, sheet_ranges[f'{letter}51'].value)
+    elif preset_text.get('1.0', 'end').split('\n')[0] == 'clear':
+        lb = load_workbook(filename='presets.xlsx')
+        sheet_ranges = lb['Sheet']
+        letter = 'A'
+        btn_preset_text.set('Preset 1')
+        preset_text.delete('1.0', 'end')
+
+        sheet_ranges[f'{letter}1'].value = 'Preset 1'
+        sheet_ranges[f'{letter}2'].value = ''
+        sheet_ranges[f'{letter}3'].value = ''
+        sheet_ranges[f'{letter}4'].value = ''
+        sheet_ranges[f'{letter}5'].value = ''
+        sheet_ranges[f'{letter}6'].value = ''
+        sheet_ranges[f'{letter}7'].value = ''
+        sheet_ranges[f'{letter}8'].value = ''
+        sheet_ranges[f'{letter}9'].value = ''
+        sheet_ranges[f'{letter}10'].value = ''
+        sheet_ranges[f'{letter}11'].value = ''
+        sheet_ranges[f'{letter}12'].value = ''
+        sheet_ranges[f'{letter}13'].value = ''
+        sheet_ranges[f'{letter}14'].value = ''
+        sheet_ranges[f'{letter}15'].value = ''
+        sheet_ranges[f'{letter}16'].value = ''
+        sheet_ranges[f'{letter}17'].value = ''
+        sheet_ranges[f'{letter}18'].value = ''
+        sheet_ranges[f'{letter}19'].value = ''
+        sheet_ranges[f'{letter}20'].value = ''
+        sheet_ranges[f'{letter}21'].value = ''
+        sheet_ranges[f'{letter}22'].value = ''
+        sheet_ranges[f'{letter}23'].value = ''
+        sheet_ranges[f'{letter}24'].value = ''
+        sheet_ranges[f'{letter}25'].value = ''
+        sheet_ranges[f'{letter}26'].value = ''
+        sheet_ranges[f'{letter}27'].value = ''
+        sheet_ranges[f'{letter}28'].value = ''
+        sheet_ranges[f'{letter}29'].value = ''
+        sheet_ranges[f'{letter}30'].value = ''
+        sheet_ranges[f'{letter}31'].value = ''
+        sheet_ranges[f'{letter}32'].value = ''
+        sheet_ranges[f'{letter}33'].value = ''
+        sheet_ranges[f'{letter}34'].value = ''
+        sheet_ranges[f'{letter}35'].value = ''
+        sheet_ranges[f'{letter}36'].value = ''
+        sheet_ranges[f'{letter}37'].value = ''
+        sheet_ranges[f'{letter}38'].value = ''
+        sheet_ranges[f'{letter}39'].value = ''
+        sheet_ranges[f'{letter}40'].value = ''
+        sheet_ranges[f'{letter}41'].value = ''
+        sheet_ranges[f'{letter}42'].value = ''
+        sheet_ranges[f'{letter}43'].value = ''
+        sheet_ranges[f'{letter}44'].value = ''
+        sheet_ranges[f'{letter}45'].value = ''
+        sheet_ranges[f'{letter}46'].value = ''
+        sheet_ranges[f'{letter}47'].value = ''
+        sheet_ranges[f'{letter}48'].value = ''
+        sheet_ranges[f'{letter}49'].value = ''
+        sheet_ranges[f'{letter}50'].value = ''
+        sheet_ranges[f'{letter}51'].value = ''
+        lb.save('presets.xlsx')
+    else:
+        lb = load_workbook(filename='presets.xlsx')
+        sheet_ranges = lb['Sheet']
+        letter = 'A'
+
+        sheet_ranges[f'{letter}1'].value = preset_text.get('1.0', 'end').split('\n')[0]
+        btn_preset_text.set(sheet_ranges[f'{letter}1'].value)
+        preset_text.delete('1.0', 'end')
+
+        sheet_ranges[f'{letter}2'].value = rpnum_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}3'].value = item_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}4'].value = serial_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}5'].value = key_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}6'].value = fb_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}7'].value = comp_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}8'].value = structure_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}9'].value = parts_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}10'].value = pic_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}11'].value = his_rp_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}12'].value = his_comp_date_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}13'].value = his_symptom_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}14'].value = his_result_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}15'].value = appearance_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}16'].value = symptom_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}17'].value = tests_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}18'].value = analysis_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}19'].value = failure_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}20'].value = bapp_impact.get()
+        sheet_ranges[f'{letter}21'].value = bapp_cable.get()
+        sheet_ranges[f'{letter}22'].value = bapp_filterglass.get()
+        sheet_ranges[f'{letter}23'].value = bapp_nff.get()
+        sheet_ranges[f'{letter}24'].value = bapp_oil.get()
+        sheet_ranges[f'{letter}25'].value = bsym_cable.get()
+        sheet_ranges[f'{letter}26'].value = bsym_inout.get()
+        sheet_ranges[f'{letter}27'].value = bsym_nffstruct.get()
+        sheet_ranges[f'{letter}28'].value = bsym_nocom.get()
+        sheet_ranges[f'{letter}29'].value = bsym_noint.get()
+        sheet_ranges[f'{letter}30'].value = bsym_nolaser.get()
+        sheet_ranges[f'{letter}31'].value = bsym_nopower.get()
+        sheet_ranges[f'{letter}32'].value = bsym_symnff.get()
+        sheet_ranges[f'{letter}33'].value = rp.get()
+        sheet_ranges[f'{letter}34'].value = nrp.get()
+        sheet_ranges[f'{letter}35'].value = rt.get()
+        sheet_ranges[f'{letter}36'].value = kj.get()
+        sheet_ranges[f'{letter}37'].value = bhotswap.get()
+        sheet_ranges[f'{letter}38'].value = bvibration.get()
+        sheet_ranges[f'{letter}39'].value = bnoise.get()
+        sheet_ranges[f'{letter}40'].value = bheat.get()
+        sheet_ranges[f'{letter}41'].value = bnff.get()
+        sheet_ranges[f'{letter}42'].value = bcable.get()
+        sheet_ranges[f'{letter}43'].value = bsym_symnff.get()
+        sheet_ranges[f'{letter}44'].value = bsym_cable.get()
+        sheet_ranges[f'{letter}45'].value = bsurge.get()
+        sheet_ranges[f'{letter}46'].value = c_appearance_text.get('1.0', 'end').split('\n')[0]
+        sheet_ranges[f'{letter}47'].value = c_operation_text.get('1.0', 'end').split('\n')[0]
+        sheet_ranges[f'{letter}48'].value = c_internal_text.get('1.0', 'end').split('\n')[0]
+        sheet_ranges[f'{letter}49'].value = c_suspected_text.get('1.0', 'end').split('\n')[0]
+        sheet_ranges[f'{letter}50'].value = c_conclusion_text.get('1.0', 'end').split('\n')[0]
+        sheet_ranges[f'{letter}51'].value = bench_text.get('1.0', 'end').split('\n')[0]
+        lb.save('presets.xlsx')
+    return None
+
+
+def save_exe_preset2():
+    if preset_text.get('1.0', 'end').split('\n')[0] == '':
+        lb = load_workbook(filename='presets.xlsx')
+        sheet_ranges = lb['Sheet']
+        letter = 'B'
+        rpnum_text.insert(tk.END, sheet_ranges[f'{letter}2'].value)
+        item_text.insert(tk.END, sheet_ranges[f'{letter}3'].value)
+        serial_text.insert(tk.END, sheet_ranges[f'{letter}4'].value)
+        key_text.insert(tk.END, sheet_ranges[f'{letter}5'].value)
+        fb_text.insert(tk.END, sheet_ranges[f'{letter}6'].value)
+        comp_text.insert(tk.END, sheet_ranges[f'{letter}7'].value)
+        structure_text.insert(tk.END, sheet_ranges[f'{letter}8'].value)
+        parts_text.insert(tk.END, sheet_ranges[f'{letter}9'].value)
+        pic_text.insert(tk.END, sheet_ranges[f'{letter}10'].value)
+        his_rp_text.insert(tk.END, sheet_ranges[f'{letter}11'].value)
+        his_comp_date_text.insert(tk.END, sheet_ranges[f'{letter}12'].value)
+        his_symptom_text.insert(tk.END, sheet_ranges[f'{letter}13'].value)
+        his_result_text.insert(tk.END, sheet_ranges[f'{letter}14'].value)
+        appearance_text.insert(tk.END, sheet_ranges[f'{letter}15'].value)
+        symptom_text.insert(tk.END, sheet_ranges[f'{letter}16'].value)
+        tests_text.insert(tk.END, sheet_ranges[f'{letter}17'].value)
+        analysis_text.insert(tk.END, sheet_ranges[f'{letter}18'].value)
+        failure_text.insert(tk.END, sheet_ranges[f'{letter}19'].value)
+        if str(sheet_ranges[f'{letter}20'].value) == 'True':
+            bapp_impact.set(True)
+        else:
+            bapp_impact.set(False)
+        if str(sheet_ranges[f'{letter}21'].value) == 'True':
+            bapp_cable.set(True)
+        else:
+            bapp_cable.set(False)
+        if str(sheet_ranges[f'{letter}22'].value) == 'True':
+            bapp_filterglass.set(True)
+        else:
+            bapp_filterglass.set(False)
+        if str(sheet_ranges[f'{letter}23'].value) == 'True':
+            bapp_nff.set(True)
+        else:
+            bapp_nff.set(False)
+        if str(sheet_ranges[f'{letter}24'].value) == 'True':
+            bapp_oil.set(True)
+        else:
+            bapp_oil.set(False)
+        if str(sheet_ranges[f'{letter}25'].value) == 'True':
+            bsym_cable.set(True)
+        else:
+            bsym_cable.set(False)
+        if str(sheet_ranges[f'{letter}26'].value) == 'True':
+            bsym_inout.set(True)
+        else:
+            bsym_inout.set(False)
+        if str(sheet_ranges[f'{letter}27'].value) == 'True':
+            bsym_nffstruct.set(True)
+        else:
+            bsym_nffstruct.set(False)
+        if str(sheet_ranges[f'{letter}28'].value) == 'True':
+            bsym_nocom.set(True)
+        else:
+            bsym_nocom.set(False)
+        if str(sheet_ranges[f'{letter}29'].value) == 'True':
+            bsym_noint.set(True)
+        else:
+            bsym_noint.set(False)
+        if str(sheet_ranges[f'{letter}30'].value) == 'True':
+            bsym_nolaser.set(True)
+        else:
+            bsym_nolaser.set(False)
+        if str(sheet_ranges[f'{letter}31'].value) == 'True':
+            bsym_nopower.set(True)
+        else:
+            bsym_nopower.set(False)
+        if str(sheet_ranges[f'{letter}32'].value) == 'True':
+            bsym_symnff.set(True)
+        else:
+            bsym_symnff.set(False)
+        if str(sheet_ranges[f'{letter}33'].value) == 'True':
+            rp.set(True)
+        else:
+            rp.set(False)
+        if str(sheet_ranges[f'{letter}34'].value) == 'True':
+            nrp.set(True)
+        else:
+            nrp.set(False)
+        if str(sheet_ranges[f'{letter}35'].value) == 'True':
+            rt.set(True)
+        else:
+            rt.set(False)
+        if str(sheet_ranges[f'{letter}36'].value) == 'True':
+            kj.set(True)
+        else:
+            kj.set(False)
+        if str(sheet_ranges[f'{letter}37'].value) == 'True':
+            bhotswap.set(True)
+        else:
+            bhotswap.set(False)
+        if str(sheet_ranges[f'{letter}38'].value) == 'True':
+            bvibration.set(True)
+        else:
+            bvibration.set(False)
+        if str(sheet_ranges[f'{letter}39'].value) == 'True':
+            bnoise.set(True)
+        else:
+            bnoise.set(False)
+        if str(sheet_ranges[f'{letter}40'].value) == 'True':
+            bheat.set(True)
+        else:
+            bheat.set(False)
+        if str(sheet_ranges[f'{letter}41'].value) == 'True':
+            bnff.set(True)
+        else:
+            bnff.set(False)
+        if str(sheet_ranges[f'{letter}42'].value) == 'True':
+            bcable.set(True)
+        else:
+            bcable.set(False)
+        if str(sheet_ranges[f'{letter}43'].value) == 'True':
+            bsym_symnff.set(True)
+        else:
+            bsym_symnff.set(False)
+        if str(sheet_ranges[f'{letter}44'].value) == 'True':
+            bsym_cable.set(True)
+        else:
+            bsym_cable.set(False)
+        if str(sheet_ranges[f'{letter}45'].value) == 'True':
+            bsurge.set(True)
+        else:
+            bsurge.set(False)
+        c_appearance_text.insert(tk.END, sheet_ranges[f'{letter}46'].value)
+        c_operation_text.insert(tk.END, sheet_ranges[f'{letter}47'].value)
+        c_internal_text.insert(tk.END, sheet_ranges[f'{letter}48'].value)
+        c_suspected_text.insert(tk.END, sheet_ranges[f'{letter}49'].value)
+        c_conclusion_text.insert(tk.END, sheet_ranges[f'{letter}50'].value)
+        bench_text.insert(tk.END, sheet_ranges[f'{letter}51'].value)
+    elif preset_text.get('1.0', 'end').split('\n')[0] == 'clear':
+        lb = load_workbook(filename='presets.xlsx')
+        sheet_ranges = lb['Sheet']
+        letter = 'B'
+        btn_preset2_text.set('Preset 2')
+        preset_text.delete('1.0', 'end')
+
+        sheet_ranges[f'{letter}1'].value = 'Preset 2'
+        sheet_ranges[f'{letter}2'].value = ''
+        sheet_ranges[f'{letter}3'].value = ''
+        sheet_ranges[f'{letter}4'].value = ''
+        sheet_ranges[f'{letter}5'].value = ''
+        sheet_ranges[f'{letter}6'].value = ''
+        sheet_ranges[f'{letter}7'].value = ''
+        sheet_ranges[f'{letter}8'].value = ''
+        sheet_ranges[f'{letter}9'].value = ''
+        sheet_ranges[f'{letter}10'].value = ''
+        sheet_ranges[f'{letter}11'].value = ''
+        sheet_ranges[f'{letter}12'].value = ''
+        sheet_ranges[f'{letter}13'].value = ''
+        sheet_ranges[f'{letter}14'].value = ''
+        sheet_ranges[f'{letter}15'].value = ''
+        sheet_ranges[f'{letter}16'].value = ''
+        sheet_ranges[f'{letter}17'].value = ''
+        sheet_ranges[f'{letter}18'].value = ''
+        sheet_ranges[f'{letter}19'].value = ''
+        sheet_ranges[f'{letter}20'].value = ''
+        sheet_ranges[f'{letter}21'].value = ''
+        sheet_ranges[f'{letter}22'].value = ''
+        sheet_ranges[f'{letter}23'].value = ''
+        sheet_ranges[f'{letter}24'].value = ''
+        sheet_ranges[f'{letter}25'].value = ''
+        sheet_ranges[f'{letter}26'].value = ''
+        sheet_ranges[f'{letter}27'].value = ''
+        sheet_ranges[f'{letter}28'].value = ''
+        sheet_ranges[f'{letter}29'].value = ''
+        sheet_ranges[f'{letter}30'].value = ''
+        sheet_ranges[f'{letter}31'].value = ''
+        sheet_ranges[f'{letter}32'].value = ''
+        sheet_ranges[f'{letter}33'].value = ''
+        sheet_ranges[f'{letter}34'].value = ''
+        sheet_ranges[f'{letter}35'].value = ''
+        sheet_ranges[f'{letter}36'].value = ''
+        sheet_ranges[f'{letter}37'].value = ''
+        sheet_ranges[f'{letter}38'].value = ''
+        sheet_ranges[f'{letter}39'].value = ''
+        sheet_ranges[f'{letter}40'].value = ''
+        sheet_ranges[f'{letter}41'].value = ''
+        sheet_ranges[f'{letter}42'].value = ''
+        sheet_ranges[f'{letter}43'].value = ''
+        sheet_ranges[f'{letter}44'].value = ''
+        sheet_ranges[f'{letter}45'].value = ''
+        sheet_ranges[f'{letter}46'].value = ''
+        sheet_ranges[f'{letter}47'].value = ''
+        sheet_ranges[f'{letter}48'].value = ''
+        sheet_ranges[f'{letter}49'].value = ''
+        sheet_ranges[f'{letter}50'].value = ''
+        sheet_ranges[f'{letter}51'].value = ''
+        lb.save('presets.xlsx')
+    else:
+        lb = load_workbook(filename='presets.xlsx')
+        sheet_ranges = lb['Sheet']
+        letter = 'B'
+
+        sheet_ranges[f'{letter}1'].value = preset_text.get('1.0', 'end').split('\n')[0]
+        btn_preset2_text.set(sheet_ranges[f'{letter}1'].value)
+        preset_text.delete('1.0', 'end')
+
+        sheet_ranges[f'{letter}2'].value = rpnum_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}3'].value = item_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}4'].value = serial_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}5'].value = key_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}6'].value = fb_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}7'].value = comp_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}8'].value = structure_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}9'].value = parts_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}10'].value = pic_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}11'].value = his_rp_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}12'].value = his_comp_date_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}13'].value = his_symptom_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}14'].value = his_result_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}15'].value = appearance_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}16'].value = symptom_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}17'].value = tests_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}18'].value = analysis_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}19'].value = failure_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}20'].value = bapp_impact.get()
+        sheet_ranges[f'{letter}21'].value = bapp_cable.get()
+        sheet_ranges[f'{letter}22'].value = bapp_filterglass.get()
+        sheet_ranges[f'{letter}23'].value = bapp_nff.get()
+        sheet_ranges[f'{letter}24'].value = bapp_oil.get()
+        sheet_ranges[f'{letter}25'].value = bsym_cable.get()
+        sheet_ranges[f'{letter}26'].value = bsym_inout.get()
+        sheet_ranges[f'{letter}27'].value = bsym_nffstruct.get()
+        sheet_ranges[f'{letter}28'].value = bsym_nocom.get()
+        sheet_ranges[f'{letter}29'].value = bsym_noint.get()
+        sheet_ranges[f'{letter}30'].value = bsym_nolaser.get()
+        sheet_ranges[f'{letter}31'].value = bsym_nopower.get()
+        sheet_ranges[f'{letter}32'].value = bsym_symnff.get()
+        sheet_ranges[f'{letter}33'].value = rp.get()
+        sheet_ranges[f'{letter}34'].value = nrp.get()
+        sheet_ranges[f'{letter}35'].value = rt.get()
+        sheet_ranges[f'{letter}36'].value = kj.get()
+        sheet_ranges[f'{letter}37'].value = bhotswap.get()
+        sheet_ranges[f'{letter}38'].value = bvibration.get()
+        sheet_ranges[f'{letter}39'].value = bnoise.get()
+        sheet_ranges[f'{letter}40'].value = bheat.get()
+        sheet_ranges[f'{letter}41'].value = bnff.get()
+        sheet_ranges[f'{letter}42'].value = bcable.get()
+        sheet_ranges[f'{letter}43'].value = bsym_symnff.get()
+        sheet_ranges[f'{letter}44'].value = bsym_cable.get()
+        sheet_ranges[f'{letter}45'].value = bsurge.get()
+        sheet_ranges[f'{letter}46'].value = c_appearance_text.get('1.0', 'end').split('\n')[0]
+        sheet_ranges[f'{letter}47'].value = c_operation_text.get('1.0', 'end').split('\n')[0]
+        sheet_ranges[f'{letter}48'].value = c_internal_text.get('1.0', 'end').split('\n')[0]
+        sheet_ranges[f'{letter}49'].value = c_suspected_text.get('1.0', 'end').split('\n')[0]
+        sheet_ranges[f'{letter}50'].value = c_conclusion_text.get('1.0', 'end').split('\n')[0]
+        sheet_ranges[f'{letter}51'].value = bench_text.get('1.0', 'end').split('\n')[0]
+        lb.save('presets.xlsx')
+    return None
+
+def save_exe_preset3():
+    if preset_text.get('1.0', 'end').split('\n')[0] == '':
+        lb = load_workbook(filename='presets.xlsx')
+        sheet_ranges = lb['Sheet']
+        letter = 'C'
+        rpnum_text.insert(tk.END, sheet_ranges[f'{letter}2'].value)
+        item_text.insert(tk.END, sheet_ranges[f'{letter}3'].value)
+        serial_text.insert(tk.END, sheet_ranges[f'{letter}4'].value)
+        key_text.insert(tk.END, sheet_ranges[f'{letter}5'].value)
+        fb_text.insert(tk.END, sheet_ranges[f'{letter}6'].value)
+        comp_text.insert(tk.END, sheet_ranges[f'{letter}7'].value)
+        structure_text.insert(tk.END, sheet_ranges[f'{letter}8'].value)
+        parts_text.insert(tk.END, sheet_ranges[f'{letter}9'].value)
+        pic_text.insert(tk.END, sheet_ranges[f'{letter}10'].value)
+        his_rp_text.insert(tk.END, sheet_ranges[f'{letter}11'].value)
+        his_comp_date_text.insert(tk.END, sheet_ranges[f'{letter}12'].value)
+        his_symptom_text.insert(tk.END, sheet_ranges[f'{letter}13'].value)
+        his_result_text.insert(tk.END, sheet_ranges[f'{letter}14'].value)
+        appearance_text.insert(tk.END, sheet_ranges[f'{letter}15'].value)
+        symptom_text.insert(tk.END, sheet_ranges[f'{letter}16'].value)
+        tests_text.insert(tk.END, sheet_ranges[f'{letter}17'].value)
+        analysis_text.insert(tk.END, sheet_ranges[f'{letter}18'].value)
+        failure_text.insert(tk.END, sheet_ranges[f'{letter}19'].value)
+        if str(sheet_ranges[f'{letter}20'].value) == 'True':
+            bapp_impact.set(True)
+        else:
+            bapp_impact.set(False)
+        if str(sheet_ranges[f'{letter}21'].value) == 'True':
+            bapp_cable.set(True)
+        else:
+            bapp_cable.set(False)
+        if str(sheet_ranges[f'{letter}22'].value) == 'True':
+            bapp_filterglass.set(True)
+        else:
+            bapp_filterglass.set(False)
+        if str(sheet_ranges[f'{letter}23'].value) == 'True':
+            bapp_nff.set(True)
+        else:
+            bapp_nff.set(False)
+        if str(sheet_ranges[f'{letter}24'].value) == 'True':
+            bapp_oil.set(True)
+        else:
+            bapp_oil.set(False)
+        if str(sheet_ranges[f'{letter}25'].value) == 'True':
+            bsym_cable.set(True)
+        else:
+            bsym_cable.set(False)
+        if str(sheet_ranges[f'{letter}26'].value) == 'True':
+            bsym_inout.set(True)
+        else:
+            bsym_inout.set(False)
+        if str(sheet_ranges[f'{letter}27'].value) == 'True':
+            bsym_nffstruct.set(True)
+        else:
+            bsym_nffstruct.set(False)
+        if str(sheet_ranges[f'{letter}28'].value) == 'True':
+            bsym_nocom.set(True)
+        else:
+            bsym_nocom.set(False)
+        if str(sheet_ranges[f'{letter}29'].value) == 'True':
+            bsym_noint.set(True)
+        else:
+            bsym_noint.set(False)
+        if str(sheet_ranges[f'{letter}30'].value) == 'True':
+            bsym_nolaser.set(True)
+        else:
+            bsym_nolaser.set(False)
+        if str(sheet_ranges[f'{letter}31'].value) == 'True':
+            bsym_nopower.set(True)
+        else:
+            bsym_nopower.set(False)
+        if str(sheet_ranges[f'{letter}32'].value) == 'True':
+            bsym_symnff.set(True)
+        else:
+            bsym_symnff.set(False)
+        if str(sheet_ranges[f'{letter}33'].value) == 'True':
+            rp.set(True)
+        else:
+            rp.set(False)
+        if str(sheet_ranges[f'{letter}34'].value) == 'True':
+            nrp.set(True)
+        else:
+            nrp.set(False)
+        if str(sheet_ranges[f'{letter}35'].value) == 'True':
+            rt.set(True)
+        else:
+            rt.set(False)
+        if str(sheet_ranges[f'{letter}36'].value) == 'True':
+            kj.set(True)
+        else:
+            kj.set(False)
+        if str(sheet_ranges[f'{letter}37'].value) == 'True':
+            bhotswap.set(True)
+        else:
+            bhotswap.set(False)
+        if str(sheet_ranges[f'{letter}38'].value) == 'True':
+            bvibration.set(True)
+        else:
+            bvibration.set(False)
+        if str(sheet_ranges[f'{letter}39'].value) == 'True':
+            bnoise.set(True)
+        else:
+            bnoise.set(False)
+        if str(sheet_ranges[f'{letter}40'].value) == 'True':
+            bheat.set(True)
+        else:
+            bheat.set(False)
+        if str(sheet_ranges[f'{letter}41'].value) == 'True':
+            bnff.set(True)
+        else:
+            bnff.set(False)
+        if str(sheet_ranges[f'{letter}42'].value) == 'True':
+            bcable.set(True)
+        else:
+            bcable.set(False)
+        if str(sheet_ranges[f'{letter}43'].value) == 'True':
+            bsym_symnff.set(True)
+        else:
+            bsym_symnff.set(False)
+        if str(sheet_ranges[f'{letter}44'].value) == 'True':
+            bsym_cable.set(True)
+        else:
+            bsym_cable.set(False)
+        if str(sheet_ranges[f'{letter}45'].value) == 'True':
+            bsurge.set(True)
+        else:
+            bsurge.set(False)
+        c_appearance_text.insert(tk.END, sheet_ranges[f'{letter}46'].value)
+        c_operation_text.insert(tk.END, sheet_ranges[f'{letter}47'].value)
+        c_internal_text.insert(tk.END, sheet_ranges[f'{letter}48'].value)
+        c_suspected_text.insert(tk.END, sheet_ranges[f'{letter}49'].value)
+        c_conclusion_text.insert(tk.END, sheet_ranges[f'{letter}50'].value)
+        bench_text.insert(tk.END, sheet_ranges[f'{letter}51'].value)
+    elif preset_text.get('1.0', 'end').split('\n')[0] == 'clear':
+        lb = load_workbook(filename='presets.xlsx')
+        sheet_ranges = lb['Sheet']
+        letter = 'C'
+        btn_preset3_text.set('Preset 3')
+        preset_text.delete('1.0', 'end')
+
+        sheet_ranges[f'{letter}1'].value = 'Preset 3'
+        sheet_ranges[f'{letter}2'].value = ''
+        sheet_ranges[f'{letter}3'].value = ''
+        sheet_ranges[f'{letter}4'].value = ''
+        sheet_ranges[f'{letter}5'].value = ''
+        sheet_ranges[f'{letter}6'].value = ''
+        sheet_ranges[f'{letter}7'].value = ''
+        sheet_ranges[f'{letter}8'].value = ''
+        sheet_ranges[f'{letter}9'].value = ''
+        sheet_ranges[f'{letter}10'].value = ''
+        sheet_ranges[f'{letter}11'].value = ''
+        sheet_ranges[f'{letter}12'].value = ''
+        sheet_ranges[f'{letter}13'].value = ''
+        sheet_ranges[f'{letter}14'].value = ''
+        sheet_ranges[f'{letter}15'].value = ''
+        sheet_ranges[f'{letter}16'].value = ''
+        sheet_ranges[f'{letter}17'].value = ''
+        sheet_ranges[f'{letter}18'].value = ''
+        sheet_ranges[f'{letter}19'].value = ''
+        sheet_ranges[f'{letter}20'].value = ''
+        sheet_ranges[f'{letter}21'].value = ''
+        sheet_ranges[f'{letter}22'].value = ''
+        sheet_ranges[f'{letter}23'].value = ''
+        sheet_ranges[f'{letter}24'].value = ''
+        sheet_ranges[f'{letter}25'].value = ''
+        sheet_ranges[f'{letter}26'].value = ''
+        sheet_ranges[f'{letter}27'].value = ''
+        sheet_ranges[f'{letter}28'].value = ''
+        sheet_ranges[f'{letter}29'].value = ''
+        sheet_ranges[f'{letter}30'].value = ''
+        sheet_ranges[f'{letter}31'].value = ''
+        sheet_ranges[f'{letter}32'].value = ''
+        sheet_ranges[f'{letter}33'].value = ''
+        sheet_ranges[f'{letter}34'].value = ''
+        sheet_ranges[f'{letter}35'].value = ''
+        sheet_ranges[f'{letter}36'].value = ''
+        sheet_ranges[f'{letter}37'].value = ''
+        sheet_ranges[f'{letter}38'].value = ''
+        sheet_ranges[f'{letter}39'].value = ''
+        sheet_ranges[f'{letter}40'].value = ''
+        sheet_ranges[f'{letter}41'].value = ''
+        sheet_ranges[f'{letter}42'].value = ''
+        sheet_ranges[f'{letter}43'].value = ''
+        sheet_ranges[f'{letter}44'].value = ''
+        sheet_ranges[f'{letter}45'].value = ''
+        sheet_ranges[f'{letter}46'].value = ''
+        sheet_ranges[f'{letter}47'].value = ''
+        sheet_ranges[f'{letter}48'].value = ''
+        sheet_ranges[f'{letter}49'].value = ''
+        sheet_ranges[f'{letter}50'].value = ''
+        sheet_ranges[f'{letter}51'].value = ''
+        lb.save('presets.xlsx')
+    else:
+        lb = load_workbook(filename='presets.xlsx')
+        sheet_ranges = lb['Sheet']
+        letter = 'C'
+
+        sheet_ranges[f'{letter}1'].value = preset_text.get('1.0', 'end').split('\n')[0]
+        btn_preset3_text.set(sheet_ranges[f'{letter}1'].value)
+        preset_text.delete('1.0', 'end')
+
+        sheet_ranges[f'{letter}2'].value = rpnum_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}3'].value = item_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}4'].value = serial_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}5'].value = key_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}6'].value = fb_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}7'].value = comp_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}8'].value = structure_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}9'].value = parts_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}10'].value = pic_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}11'].value = his_rp_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}12'].value = his_comp_date_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}13'].value = his_symptom_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}14'].value = his_result_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}15'].value = appearance_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}16'].value = symptom_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}17'].value = tests_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}18'].value = analysis_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}19'].value = failure_text.get('1.0', 'end')
+        sheet_ranges[f'{letter}20'].value = bapp_impact.get()
+        sheet_ranges[f'{letter}21'].value = bapp_cable.get()
+        sheet_ranges[f'{letter}22'].value = bapp_filterglass.get()
+        sheet_ranges[f'{letter}23'].value = bapp_nff.get()
+        sheet_ranges[f'{letter}24'].value = bapp_oil.get()
+        sheet_ranges[f'{letter}25'].value = bsym_cable.get()
+        sheet_ranges[f'{letter}26'].value = bsym_inout.get()
+        sheet_ranges[f'{letter}27'].value = bsym_nffstruct.get()
+        sheet_ranges[f'{letter}28'].value = bsym_nocom.get()
+        sheet_ranges[f'{letter}29'].value = bsym_noint.get()
+        sheet_ranges[f'{letter}30'].value = bsym_nolaser.get()
+        sheet_ranges[f'{letter}31'].value = bsym_nopower.get()
+        sheet_ranges[f'{letter}32'].value = bsym_symnff.get()
+        sheet_ranges[f'{letter}33'].value = rp.get()
+        sheet_ranges[f'{letter}34'].value = nrp.get()
+        sheet_ranges[f'{letter}35'].value = rt.get()
+        sheet_ranges[f'{letter}36'].value = kj.get()
+        sheet_ranges[f'{letter}37'].value = bhotswap.get()
+        sheet_ranges[f'{letter}38'].value = bvibration.get()
+        sheet_ranges[f'{letter}39'].value = bnoise.get()
+        sheet_ranges[f'{letter}40'].value = bheat.get()
+        sheet_ranges[f'{letter}41'].value = bnff.get()
+        sheet_ranges[f'{letter}42'].value = bcable.get()
+        sheet_ranges[f'{letter}43'].value = bsym_symnff.get()
+        sheet_ranges[f'{letter}44'].value = bsym_cable.get()
+        sheet_ranges[f'{letter}45'].value = bsurge.get()
+        sheet_ranges[f'{letter}46'].value = c_appearance_text.get('1.0', 'end').split('\n')[0]
+        sheet_ranges[f'{letter}47'].value = c_operation_text.get('1.0', 'end').split('\n')[0]
+        sheet_ranges[f'{letter}48'].value = c_internal_text.get('1.0', 'end').split('\n')[0]
+        sheet_ranges[f'{letter}49'].value = c_suspected_text.get('1.0', 'end').split('\n')[0]
+        sheet_ranges[f'{letter}50'].value = c_conclusion_text.get('1.0', 'end').split('\n')[0]
+        sheet_ranges[f'{letter}51'].value = bench_text.get('1.0', 'end').split('\n')[0]
+        lb.save('presets.xlsx')
+    return None
 
 root = tk.Tk()
 w, h = root.winfo_screenwidth(), root.winfo_screenheight()
 # root.geometry("%dx%d+0+0" % (w, h))
-root.geometry('1300x750')
+root.geometry('1280x800')
 root.title('RSS Generator')
 
 rpnum_label = tk.Label(text='RP#')
@@ -455,6 +1256,12 @@ pic_label.grid(row=5, column=3)
 pic_text = tk.Text(root, height=1, width=20)
 pic_text.grid(row=6, column=3)
 pic_text.bind("<Tab>", focus_next_window)
+
+bench_label = tk.Label(text='Bench Time')
+bench_label.grid(row=1, column=4)
+bench_text = tk.Text(root, height=1, width=20)
+bench_text.grid(row=2, column=4)
+bench_text.bind("<Tab>", focus_next_window)
 
 his_label = tk.Label(text='Repair History')
 his_label.grid(row=1, column=5)
@@ -526,8 +1333,7 @@ bhotswap = tk.BooleanVar()
 bvibration = tk.BooleanVar()
 bnoise = tk.BooleanVar()
 bheat = tk.BooleanVar()
-breplicated = tk.BooleanVar()
-bdisassembled = tk.BooleanVar()
+bsurge = tk.BooleanVar()
 bnff = tk.BooleanVar()
 bcable = tk.BooleanVar()
 
@@ -542,12 +1348,8 @@ bsym_noint = tk.BooleanVar()
 bsym_nocom = tk.BooleanVar()
 bsym_nolaser = tk.BooleanVar()
 bsym_nffstruct = tk.BooleanVar()
-
-btest_runtest = tk.BooleanVar()
-btest_fftest = tk.BooleanVar()
 bsym_symnff = tk.BooleanVar()
 bsym_cable = tk.BooleanVar()
-bsurge = tk.BooleanVar()
 bsym_inout = tk.BooleanVar()
 
 c_addition = tk.Label(text='Inspection Report', fg="black")
@@ -683,39 +1485,9 @@ cable.grid(row=20, column=4)
 nff = tk.Checkbutton(root, text="NFF",
                      onvalue=1, offvalue=0, height=1,
                      width=10, variable=bnff)
-nff.grid(row=20, column=4)
-
-# key_label = tk.Label(text='Testing Quick Menu')
-# key_label.grid(row=13, column=3)
-#
-# runtest = tk.Checkbutton(root, text="Run Test",
-#                            onvalue=1, offvalue=0, height=1,
-#                            width=25, variable=btest_runtest)
-# runtest.grid(row=14, column=3)
-#
-# fftest = tk.Checkbutton(root, text="Full Function Test",
-#                            onvalue=1, offvalue=0, height=1,
-#                            width=25, variable=btest_fftest)
-# fftest.grid(row=14, column=3)
-#
-# fftest = tk.Checkbutton(root, text="Full Function Test",
-#                            onvalue=1, offvalue=0, height=1,
-#                            width=25, variable=btest_fftest)
-# fftest.grid(row=14, column=3)
-
-# key_label = tk.Label(text='Quick Menu')
-# key_label.grid(row=13, column=4)
-#
-# disassembled = tk.Checkbutton(root, text="Was the unit disassembled?",
-#                               onvalue=1, offvalue=0, height=1,
-#                               width=25, variable=bdisassembled)
-# disassembled.grid(row=14, column=4)
-
+nff.grid(row=21, column=4)
 
 '''Form'''
-
-# quck_label = tk.Label(text=' Quick Answer ')
-# quck_label.grid(row=7, column=1)
 
 c_addition = tk.Label(text='Additional Comments for Inspection Report', fg="red")
 c_addition.grid(row=24, column=3)
@@ -750,6 +1522,32 @@ c_conclusion_text = tk.Text(root, height=5, width=30)
 c_conclusion_text.grid(row=26, column=5)
 c_conclusion_text.bind("<Tab>", focus_next_window)
 
+preset_label = tk.Label(text='Presets ("clear" for reset)')
+preset_label.grid(row=30, column=5)
+preset_text = tk.Text(root, height=1, width=20)
+preset_text.grid(row=31, column=5)
+preset_text.bind("<Tab>", focus_next_window)
+
+lb = load_workbook(filename='presets.xlsx')
+ws = lb.active
+sheet_ranges = lb['Sheet']
+
+
+btn_preset_text = tk.StringVar()
+btn_preset_text.set(sheet_ranges['A1'].value)
+btn_preset1 = tk.Button(root, height=1, width=15, textvariable=btn_preset_text, command=save_exe_preset1)
+btn_preset1.grid(row=32, column=5)
+
+btn_preset2_text = tk.StringVar()
+btn_preset2_text.set(sheet_ranges['B1'].value)
+btn_preset2 = tk.Button(root, height=1, width=15, textvariable=btn_preset2_text, command=save_exe_preset2)
+btn_preset2.grid(row=33, column=5)
+
+btn_preset3_text = tk.StringVar()
+btn_preset3_text.set(sheet_ranges['C1'].value)
+btn_preset3 = tk.Button(root, height=1, width=15, textvariable=btn_preset3_text, command=save_exe_preset3)
+btn_preset3.grid(row=34, column=5)
+
 btnRead = tk.Button(root, height=1, width=15, text="Save", command=makeform)
 btnRead.grid(row=30, column=1)
 
@@ -759,8 +1557,10 @@ btn_example.grid(row=31, column=1)
 btn_example = tk.Button(root, height=1, width=15, text="Example", command=example)
 btn_example.grid(row=30, column=2)
 
-btn_example = tk.Button(root, height=1, width=15, text="Clear Example", command=clearexample)
+btn_example = tk.Button(root, height=1, width=15, text="Clear All Values", command=clearexample)
 btn_example.grid(row=31, column=2)
 
+btn_example = tk.Button(root, height=1, width=15, text="Help", command=clearexample)
+btn_example.grid(row=32, column=2)
 
 root.mainloop()
