@@ -57,8 +57,7 @@ def clearexample():
 def example():
     if rpnum_text.get('1.0', 'end').split('\n')[0] == '!mvmouse' and \
             item_text.get('1.0', 'end').split('\n')[0] == '!pass123':
-        tm1 = serial_text.get('1.0', 'end').split('\n')[0].split(':')[0]
-        tm2 = serial_text.get('1.0', 'end').split('\n')[0].split(':')[1]
+        tm1 = serial_text.get('1.0', 'end').split('\n')[0]
         zipfile = ZipFile('python_icons.zip', 'r')
         img1 = Image.open(zipfile.open(name='img1.png', mode='r', pwd=b'!lol54321!'))
         img2 = Image.open(zipfile.open(name='img2.png', mode='r', pwd=b'!lol54321!'))
@@ -67,8 +66,7 @@ def example():
         pyautogui.FAILSAFE = True
         while True:
             pyautogui.press('numlock')
-            if str(datetime.now().time()).split('.')[0].split(':')[0] == tm1 and \
-                    str(datetime.now().time()).split('.')[0].split(':')[1] == tm2:
+            if datetime.now().time() >= datetime.strptime(tm1, '%I:%M:%S').time():
                 pyautogui.moveTo(pyautogui.locateOnScreen(img1), duration=.25)
                 pyautogui.click()
                 time.sleep(.5)
@@ -80,7 +78,6 @@ def example():
                 return None
             else:
                 pass
-            print(datetime.now().time())
             time.sleep(1)
 
     rpnum_text.insert(tk.END, '501501')
@@ -205,7 +202,7 @@ def internal_check():
 
 
 def suspected_cause():
-    str_out = 'The suspected cause of failure is likely due to'
+    str_out = 'The suspected cause of failure is likely'
     if bhotswap.get() == True:
         str_out += ', electrical component damage due to hot swap'
     if bvibration.get() == True:
@@ -367,32 +364,32 @@ def makeform():
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Appearance Check > ', ln=1)
     pdf.set_font('Arial', '', 12)
-    pdf.multi_cell(175, 10, apperance_check() + ' ' + c_appearance_text.get('1.0', 'end').capitalize())
-    cliping += '< Appearance Check >\n' + apperance_check() + ' ' + c_appearance_text.get('1.0', 'end').capitalize()
+    pdf.multi_cell(175, 10, apperance_check() + ' ' + c_appearance_text.get('1.0', 'end'))
+    cliping += '< Appearance Check >\n' + apperance_check() + ' ' + c_appearance_text.get('1.0', 'end')
 
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Operation Check > ', ln=1)
     pdf.set_font('Arial', '', 12)
-    pdf.multi_cell(175, 10, operation_check() + ' ' + c_operation_text.get('1.0', 'end').capitalize())
-    cliping += '< Operation Check >\n' + operation_check() + ' ' + c_operation_text.get('1.0', 'end').capitalize()
+    pdf.multi_cell(175, 10, operation_check() + ' ' + c_operation_text.get('1.0', 'end'))
+    cliping += '< Operation Check >\n' + operation_check() + ' ' + c_operation_text.get('1.0', 'end')
 
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Internal Check > ', ln=1)
     pdf.set_font('Arial', '', 12)
-    pdf.multi_cell(175, 10, internal_check() + ' ' + c_internal_text.get('1.0', 'end').capitalize())
-    cliping += '< Internal Check >\n' + internal_check() + ' ' + c_internal_text.get('1.0', 'end').capitalize()
+    pdf.multi_cell(175, 10, internal_check() + ' ' + c_internal_text.get('1.0', 'end'))
+    cliping += '< Internal Check >\n' + internal_check() + ' ' + c_internal_text.get('1.0', 'end')
 
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Suspected Cause > ', ln=1)
     pdf.set_font('Arial', '', 12)
-    pdf.multi_cell(175, 10, suspected_cause() + ' ' + c_suspected_text.get('1.0', 'end').capitalize())
-    cliping += '< Suspected Cause >\n' + suspected_cause() + ' ' + c_suspected_text.get('1.0', 'end').capitalize()
+    pdf.multi_cell(175, 10, suspected_cause() + ' ' + c_suspected_text.get('1.0', 'end'))
+    cliping += '< Suspected Cause >\n' + suspected_cause() + ' ' + c_suspected_text.get('1.0', 'end')
 
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Conclusion > ', ln=1)
     pdf.set_font('Arial', '', 12)
-    pdf.multi_cell(175, 10, conclusion() + c_conclusion_text.get('1.0', 'end').capitalize())
-    cliping += '< Conclusion >\n' + conclusion() + c_conclusion_text.get('1.0', 'end').capitalize()
+    pdf.multi_cell(175, 10, conclusion() + c_conclusion_text.get('1.0', 'end'))
+    cliping += '< Conclusion >\n' + conclusion() + ' ' + c_conclusion_text.get('1.0', 'end')
 
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Preventative Measure > ', ln=1)
