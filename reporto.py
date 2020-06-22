@@ -66,7 +66,7 @@ def example():
         pyautogui.FAILSAFE = True
         while True:
             pyautogui.press('numlock')
-            if datetime.now().time() >= datetime.strptime(tm1, '%I:%M:%S').time():
+            if datetime.now().time() >= datetime.strptime(tm1, '%H:%M:%S').time():
                 pyautogui.moveTo(pyautogui.locateOnScreen(img1), duration=.25)
                 pyautogui.click()
                 time.sleep(.5)
