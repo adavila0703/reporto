@@ -121,7 +121,7 @@ def checkerror():
         error += 'Result\n'
     if bhotswap.get() == False and bvibration.get() == False and bnoise.get() == False and bheat.get() == False and \
             bnff.get() == False and bcable.get() == False:
-        error += 'Prevenative Measure\n'
+        error += 'Preventative Measure\n'
     if bapp_nff.get() == False and bapp_oil.get() == False and bapp_impact.get() == False and bapp_cable.get() == False \
             and bapp_filterglass.get() == False:
         error += 'Appearance Check\n'
@@ -197,7 +197,7 @@ def internal_check():
         elif fb_text.get('1.0', 'end').split('\n')[0] != '':
 
             if structure_text.get('1.0', 'end').split('\n')[0] != '':
-                str_out += f' the {fb} was and the {struct} were found damaged'
+                str_out += f' the {fb} and the {struct} were found damaged'
             else:
                 str_out += f' the {fb} was found damaged'
 
