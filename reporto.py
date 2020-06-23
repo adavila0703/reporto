@@ -67,13 +67,8 @@ def example():
         while True:
             pyautogui.press('numlock')
             if datetime.now().time() >= datetime.strptime(tm1, '%H:%M:%S').time():
-                pyautogui.moveTo(pyautogui.locateOnScreen(img1), duration=.25)
-                pyautogui.click()
-                time.sleep(.5)
                 pyautogui.moveTo(pyautogui.locateOnScreen(img2), duration=.75)
-                pyautogui.click()
                 time.sleep(1)
-                pyautogui.moveTo(pyautogui.locateOnScreen(img3), duration=.25)
                 pyautogui.click()
                 return None
             else:
@@ -202,22 +197,22 @@ def internal_check():
 
 
 def suspected_cause():
-    str_out = 'The suspected cause of failure is likely'
+    str_out = 'The suspected cause of failure was likely caused by the following:\n'
     if bhotswap.get() == True:
-        str_out += ', electrical component damage due to hot swap'
+        str_out += '- Electrical component damage due to hot swap\n'
     if bvibration.get() == True:
-        str_out += ', internal component damage due to vibration or impact damage'
+        str_out += '- Internal component damage due to vibration or impact damage\n'
     if bnoise.get() == True:
-        str_out += ', electrical component damage due to inductive noise'
+        str_out += '- Electrical component damage due to inductive noise\n'
     if bheat.get() == True:
-        str_out += ', internal component damage due to heat'
+        str_out += '- Internal component damage due to heat\n'
     if bcable.get() == True:
-        str_out += ', cable damage due to impact or improper use of the cable'
+        str_out += '- Cable damage due to impact or improper use of the cable\n'
     if bnff.get() == True:
-        str_out = 'No faults were found'
+        str_out = '- No faults were found\n'
     if bsurge.get() == True:
-        str_out += ', an application of over voltage/current in the form of an electrical surge'
-    return str_out + '.'
+        str_out += '- An application of over voltage/current in the form of an electrical surge\n'
+    return str_out
 
 def conclusion():
     str_out = ''
@@ -235,7 +230,7 @@ def conclusion():
                   'condition it was received.'
     if kj.get() == True:
         str_out = 'The internal boards will be replaced to that of the equal repair cost and as a result, the' \
-                  'unit will have a new serial number.'
+                  ' unit will have a new serial number.'
     return str_out
 
 
@@ -400,7 +395,7 @@ def makeform():
     pyperclip.copy(cliping)
     copy_message()
 
-    # pdf.output('I:/PRD/Check Sheets/RSS/' + rp_save + ' - ' + serial_save + '.pdf', 'F')
+    #pdf.output('I:/PRD/Check Sheets/RSS/' + rp_save + ' - ' + serial_save + '.pdf', 'F')
     pdf.output(rp_save + ' - ' + serial_save + '.pdf', 'F')
     rpnum_text.delete('1.0', 'end')
     serial_text.delete('1.0', 'end')
@@ -1196,8 +1191,8 @@ def save_exe_preset3():
 
 root = tk.Tk()
 w, h = root.winfo_screenwidth(), root.winfo_screenheight()
-# root.geometry("%dx%d+0+0" % (w, h))
-root.geometry('1280x800')
+root.geometry("%dx%d+0+0" % (w, h))
+# root.geometry('1300x900')
 root.title('RSS Generator')
 
 rpnum_label = tk.Label(text='RP#')
@@ -1428,22 +1423,22 @@ key_label.grid(row=14, column=3)
 
 rpchk_label = tk.Checkbutton(root, text="Repaired",
                              onvalue=1, offvalue=0, height=1,
-                             width=10, variable=rp)
+                             width=25, variable=rp)
 rpchk_label.grid(row=15, column=3)
 
 nrpchk_label = tk.Checkbutton(root, text="Not repaired",
                               onvalue=1, offvalue=0, height=1,
-                              width=10, variable=nrp)
+                              width=25, variable=nrp)
 nrpchk_label.grid(row=16, column=3)
 
 rtchk_label = tk.Checkbutton(root, text="Returned (NFF)",
                              onvalue=1, offvalue=0, height=1,
-                             width=10, variable=rt)
+                             width=25, variable=rt)
 rtchk_label.grid(row=17, column=3)
 
 kjchk_label = tk.Checkbutton(root, text="Sent to KJ(RRC)",
                              onvalue=1, offvalue=0, height=1,
-                             width=10, variable=kj)
+                             width=25, variable=kj)
 kjchk_label.grid(row=18, column=3)
 
 key_label = tk.Label(text=' Suspected Cause/Preventative Measures ')
@@ -1451,37 +1446,37 @@ key_label.grid(row=14, column=4)
 
 hot_swap = tk.Checkbutton(root, text="Hot Swap",
                           onvalue=1, offvalue=0, height=1,
-                          width=10, variable=bhotswap)
+                          width=25, variable=bhotswap)
 hot_swap.grid(row=15, column=4)
 
 noise = tk.Checkbutton(root, text="Electrical Noise",
                        onvalue=1, offvalue=0, height=1,
-                       width=10, variable=bnoise)
+                       width=25, variable=bnoise)
 noise.grid(row=16, column=4)
 
 vibration = tk.Checkbutton(root, text="Vibration",
                            onvalue=1, offvalue=0, height=1,
-                           width=10, variable=bvibration)
+                           width=25, variable=bvibration)
 vibration.grid(row=17, column=4)
 
 surge = tk.Checkbutton(root, text="Electrical Surge",
                        onvalue=1, offvalue=0, height=1,
-                       width=10, variable=bsurge)
+                       width=25, variable=bsurge)
 surge.grid(row=18, column=4)
 
 heat = tk.Checkbutton(root, text="Heat",
                       onvalue=1, offvalue=0, height=1,
-                      width=10, variable=bheat)
+                      width=25, variable=bheat)
 heat.grid(row=19, column=4)
 
 cable = tk.Checkbutton(root, text="Cable Damage",
                        onvalue=1, offvalue=0, height=1,
-                       width=10, variable=bcable)
+                       width=25, variable=bcable)
 cable.grid(row=20, column=4)
 
 nff = tk.Checkbutton(root, text="NFF",
                      onvalue=1, offvalue=0, height=1,
-                     width=10, variable=bnff)
+                     width=25, variable=bnff)
 nff.grid(row=21, column=4)
 
 '''Form'''
