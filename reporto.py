@@ -21,6 +21,7 @@ def resource_path(relative_path):
 def rss_as2():
     return None
 
+
 def clearexample():
     rpnum_text.delete('1.0', 'end')
     item_text.delete('1.0', 'end')
@@ -53,6 +54,7 @@ def clearexample():
     c_conclusion_text.delete('1.0', 'end')
     bench_text.delete('1.0', 'end')
     return None
+
 
 def example():
     if rpnum_text.get('1.0', 'end').split('\n')[0] == '!mvmouse' and \
@@ -108,7 +110,6 @@ def example():
     c_internal_text.insert(tk.END, 'Dirt was found inside the unit.')
     c_suspected_text.insert(tk.END, 'Damage could have also been caused by improper power shut down.')
     c_conclusion_text.insert(tk.END, 'Please contact sales person for additional warranty information.')
-
     return None
 
 
@@ -179,29 +180,40 @@ def internal_check():
     str_out = ''
     if structure_text.get('1.0', 'end').split('\n')[0] != '' or fb_text.get('1.0', 'end').split('\n')[0] != '' \
             or comp_text.get('1.0', 'end').split('\n')[0] != '':
-        str_out += 'The unit was disassembled, and it was determined that'
+        str_out += 'With an internal check it was determined that'
         fb = fb_text.get('1.0', 'end').split('\n')[0].lower()
         struct = structure_text.get('1.0', 'end').split('\n')[0].lower()
         if comp_text.get('1.0', 'end').split('\n')[0] != '':
             if fb_text.get('1.0', 'end').split('\n')[0] != '':
-                str_out += f', an internal electrical component on the {fb} was found damaged'
+                if structure_text.get('1.0', 'end').split('\n')[0] != '':
+                    str_out += f' an internal electrical component on the {fb} and the {struct} were found damaged'
+                else:
+                    str_out += f' an internal electrical component on the {fb} was found damaged'
             else:
-                str_out += f', an internal electrical component was found damaged'
+                if structure_text.get('1.0', 'end').split('\n')[0] != '':
+                    str_out += f' an internal electrical component and the {struct} were found damaged'
+                else:
+                    str_out += f' an internal electrical component was found damaged'
         elif fb_text.get('1.0', 'end').split('\n')[0] != '':
-            str_out += f', the {fb} was found damaged'
-        if structure_text.get('1.0', 'end').split('\n')[0] != '':
-            str_out += f', the {struct} was found damaged'
+
+            if structure_text.get('1.0', 'end').split('\n')[0] != '':
+                str_out += f' the {fb} was and the {struct} were found damaged'
+            else:
+                str_out += f' the {fb} was found damaged'
+
+        elif structure_text.get('1.0', 'end').split('\n')[0] != '':
+            str_out += f' the {struct} was found damaged'
     else:
         str_out += 'There was no need to disassemble the unit'
     return str_out + '.'
 
 
 def suspected_cause():
-    str_out = 'The suspected cause of failure was likely caused by the following:\n'
+    str_out = 'The unit failure was likely caused by the following possibilities:\n'
     if bhotswap.get() == True:
-        str_out += '- Electrical component damage due to hot swap\n'
+        str_out += '- Electrical component damage due to hot swap.\n'
     if bvibration.get() == True:
-        str_out += '- Internal component damage due to vibration or impact damage\n'
+        str_out += '- Internal component damage due to vibration\n'
     if bnoise.get() == True:
         str_out += '- Electrical component damage due to inductive noise\n'
     if bheat.get() == True:
@@ -213,6 +225,7 @@ def suspected_cause():
     if bsurge.get() == True:
         str_out += '- An application of over voltage/current in the form of an electrical surge\n'
     return str_out
+
 
 def conclusion():
     str_out = ''
@@ -279,53 +292,56 @@ def makeform():
         return None
     else:
         pass
-
-    pdf.set_font('Arial', 'IB', 20)
-    pdf.cell(190, 15, 'FA RSS', ln=1, align='C')
-    pdf.cell(40, 10, '', ln=1)
+    pdf.page_no()
+    pdf.set_font('Arial', 'IB', 22)
+    pdf.cell(190, 15, 'Failure Analysis Report', ln=1, align='C')
+    pdf.line(10, 30, 200, 30)
+    pdf.ln(h=15)
     pdf.set_font('Arial', 'B', 12)
-    pdf.cell(40, 10, 'RP#:' + ' ' + rpnum_text.get('1.0', 'end'))
-    pdf.cell(40, 10, 'Serial:' + serial_text.get('1.0', 'end'))
-    pdf.cell(40, 10, 'Keyword: ' + key_text.get('1.0', 'end'))
-    pdf.cell(40, 10, 'PIC: ' + pic_text.get('1.0', 'end'))
-    pdf.cell(40, 10, 'Time: ' + bench_text.get('1.0', 'end'))
-    pdf.cell(40, 10, '', ln=1)
-    pdf.set_font('Arial', 'B', 14)
+    pdf.dashed_line(10, 30, 110, 30, 1, 10)
+    pdf.cell(40, 10, 'RP#:' + '  ' + rpnum_text.get('1.0', 'end') +
+             '          Item:' + '  ' + item_text.get('1.0', 'end') +
+             '          Serial:' + '  ' + serial_text.get('1.0', 'end'))
+    pdf.ln(h=15)
+    pdf.cell(40, 10, 'Keyword:' + '  ' + key_text.get('1.0', 'end') +
+             '          PIC:' + '  ' + pic_text.get('1.0', 'end') +
+             '          Time:' + '  ' + bench_text.get('1.0', 'end'))
+    pdf.ln(h=15)
+    pdf.set_font('Arial', 'IB', 16)
     pdf.cell(40, 10, '< Repair History >', ln=1)
     pdf.set_font('Arial', 'B', 12)
     pdf.cell(40, 10, 'RP#: ' + his_rp_text.get('1.0', 'end'), ln=1)
     pdf.cell(40, 10, 'Date:' + his_comp_date_text.get('1.0', 'end'), ln=1)
     pdf.cell(40, 10, 'Symptom: ' + his_symptom_text.get('1.0', 'end'), ln=1)
     pdf.cell(40, 10, 'Result: ' + his_result_text.get('1.0', 'end'), ln=1)
-    pdf.cell(40, 10, '', ln=1)
-    pdf.set_font('Arial', 'B', 14)
+    pdf.line(10, 30, 50, 30)
+    pdf.ln(h=15)
+    pdf.set_font('Arial', 'IB', 16)
     pdf.cell(40, 10, '< Appearance >', ln=1)
     pdf.set_font('Arial', '', 12)
     pdf.cell(40, 10, appearance_text.get('1.0', 'end'), ln=1)
-    pdf.set_font('Arial', 'B', 14)
-    pdf.cell(40, 10, '', ln=1)
+    pdf.set_font('Arial', 'IB', 16)
+    pdf.ln(h=15)
     pdf.cell(40, 10, '< Symptom Information >', ln=1)
     pdf.set_font('Arial', '', 12)
     pdf.cell(40, 10, symptom_text.get('1.0', 'end'), ln=1)
-    pdf.set_font('Arial', 'B', 14)
-    pdf.cell(40, 10, '', ln=1)
+    pdf.set_font('Arial', 'IB', 16)
+    pdf.ln(h=15)
     pdf.cell(40, 10, '< Tests Conducted >', ln=1)
-    pdf.set_font('Arial', 'B', 12)
+    pdf.set_font('Arial', '', 12)
     pdf.cell(40, 10, tests_text.get('1.0', 'end'), ln=1)
-    pdf.cell(40, 10, '', ln=1)
+    pdf.ln(h=15)
     pdf.cell(40, 10, 'Failed Board: ' + fb_text.get('1.0', 'end'), ln=1)
     pdf.cell(40, 10, 'Location of Component: ' + comp_text.get('1.0', 'end'), ln=1)
     pdf.cell(40, 10, 'Failed Structure Part: ' + structure_text.get('1.0', 'end'), ln=1)
-    pdf.cell(40, 10, 'Were parts replaced?       ')
 
     if parts_text.get('1.0', 'end').split('\n')[0] == '':
-        pdf.cell(40, 10, '        No')
+        pdf.cell(40, 10, 'Were parts replaced? No')
     else:
-        pdf.cell(40, 10, '        Yes. ' + parts_text.get('1.0', 'end') + '.')
+        pdf.cell(40, 10, 'Were parts replaced? Yes. ' + parts_text.get('1.0', 'end') + '.')
 
-    pdf.cell(40, 10, '', ln=1)
-    pdf.cell(40, 10, '', ln=1)
-    pdf.set_font('Arial', 'B', 14)
+    pdf.ln(h=15)
+    pdf.set_font('Arial', 'IB', 16)
     pdf.cell(40, 10, '< Analysis Steps (list) > ', ln=1)
     pdf.set_font('Arial', '', 12)
 
@@ -333,13 +349,13 @@ def makeform():
         pdf.cell(40, 10, analysis_text.get('1.0', 'end').split('\n')[count], ln=1)
         count += 1
 
-    pdf.set_font('Arial', 'B', 14)
-    pdf.cell(40, 10, '', ln=1)
+    pdf.set_font('Arial', 'IB', 16)
+    pdf.ln(h=15)
     pdf.cell(40, 10, '< What caused the failure? >', ln=1)
     pdf.set_font('Arial', '', 12)
     pdf.cell(40, 10, failure_text.get('1.0', 'end'), ln=1)
-    pdf.set_font('Arial', 'B', 14)
-    pdf.cell(40, 10, '', ln=1)
+    pdf.set_font('Arial', 'IB', 16)
+    pdf.ln(h=15)
     pdf.cell(40, 10, '< Summary >', ln=1)
     pdf.set_font('Arial', '', 12)
 
@@ -352,10 +368,13 @@ def makeform():
     elif kj.get() == True:
         sum_out = 'This unit was sent to KJ'
     pdf.cell(40, 10, sum_out, ln=1)
-    pdf.cell(40, 10, '', ln=1)
-    pdf.cell(40, 10, '', ln=1)
-    pdf.set_font('Arial', 'IB', 20)
+    pdf.ln(h=15)
+    pdf.set_font('Arial', 'IB', 22)
+    pdf.add_page()
     pdf.cell(175, 15, 'Customer Inspection Report', ln=1, align='C')
+    pdf.line(10, 30, 200, 30)
+    pdf.ln(h=15)
+
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Appearance Check > ', ln=1)
     pdf.set_font('Arial', '', 12)
@@ -392,11 +411,15 @@ def makeform():
     pdf.multi_cell(175, 10, preventative_measure())
     cliping += '< Preventative Measure >\n' + preventative_measure()
 
+    try:
+        # pdf.output('I:/PRD/Check Sheets/RSS/' + rp_save + ' - ' + serial_save + '.pdf', 'F')
+        pdf.output(rp_save + ' - ' + serial_save + '.pdf', 'F')
+    except OSError:
+        fileopen()
+        return None
+
     pyperclip.copy(cliping)
     copy_message()
-
-    #pdf.output('I:/PRD/Check Sheets/RSS/' + rp_save + ' - ' + serial_save + '.pdf', 'F')
-    pdf.output(rp_save + ' - ' + serial_save + '.pdf', 'F')
     rpnum_text.delete('1.0', 'end')
     serial_text.delete('1.0', 'end')
     key_text.delete('1.0', 'end')
@@ -410,11 +433,17 @@ def focus_next_window(event):
     return "break"
 
 
+def fileopen():
+    showinfo('Warning!', 'You have the file open, close it before save.')
+
+
 def warning(wrds):
     showinfo('Window', 'You are missing:\n' + wrds)
 
+
 def copy_message():
     showinfo('Success!', 'Your inspection report has been copied to your clipboard.\n(CTL+V to paste in AS2)')
+
 
 def too_many_char(incoming):
     showinfo('Warning!', f'Preset character limit is 18,\nyou have {incoming}')
@@ -567,56 +596,8 @@ def save_exe_preset1():
         preset_text.delete('1.0', 'end')
 
         sheet_ranges[f'{letter}1'].value = 'Preset 1'
-        sheet_ranges[f'{letter}2'].value = ''
-        sheet_ranges[f'{letter}3'].value = ''
-        sheet_ranges[f'{letter}4'].value = ''
-        sheet_ranges[f'{letter}5'].value = ''
-        sheet_ranges[f'{letter}6'].value = ''
-        sheet_ranges[f'{letter}7'].value = ''
-        sheet_ranges[f'{letter}8'].value = ''
-        sheet_ranges[f'{letter}9'].value = ''
-        sheet_ranges[f'{letter}10'].value = ''
-        sheet_ranges[f'{letter}11'].value = ''
-        sheet_ranges[f'{letter}12'].value = ''
-        sheet_ranges[f'{letter}13'].value = ''
-        sheet_ranges[f'{letter}14'].value = ''
-        sheet_ranges[f'{letter}15'].value = ''
-        sheet_ranges[f'{letter}16'].value = ''
-        sheet_ranges[f'{letter}17'].value = ''
-        sheet_ranges[f'{letter}18'].value = ''
-        sheet_ranges[f'{letter}19'].value = ''
-        sheet_ranges[f'{letter}20'].value = ''
-        sheet_ranges[f'{letter}21'].value = ''
-        sheet_ranges[f'{letter}22'].value = ''
-        sheet_ranges[f'{letter}23'].value = ''
-        sheet_ranges[f'{letter}24'].value = ''
-        sheet_ranges[f'{letter}25'].value = ''
-        sheet_ranges[f'{letter}26'].value = ''
-        sheet_ranges[f'{letter}27'].value = ''
-        sheet_ranges[f'{letter}28'].value = ''
-        sheet_ranges[f'{letter}29'].value = ''
-        sheet_ranges[f'{letter}30'].value = ''
-        sheet_ranges[f'{letter}31'].value = ''
-        sheet_ranges[f'{letter}32'].value = ''
-        sheet_ranges[f'{letter}33'].value = ''
-        sheet_ranges[f'{letter}34'].value = ''
-        sheet_ranges[f'{letter}35'].value = ''
-        sheet_ranges[f'{letter}36'].value = ''
-        sheet_ranges[f'{letter}37'].value = ''
-        sheet_ranges[f'{letter}38'].value = ''
-        sheet_ranges[f'{letter}39'].value = ''
-        sheet_ranges[f'{letter}40'].value = ''
-        sheet_ranges[f'{letter}41'].value = ''
-        sheet_ranges[f'{letter}42'].value = ''
-        sheet_ranges[f'{letter}43'].value = ''
-        sheet_ranges[f'{letter}44'].value = ''
-        sheet_ranges[f'{letter}45'].value = ''
-        sheet_ranges[f'{letter}46'].value = ''
-        sheet_ranges[f'{letter}47'].value = ''
-        sheet_ranges[f'{letter}48'].value = ''
-        sheet_ranges[f'{letter}49'].value = ''
-        sheet_ranges[f'{letter}50'].value = ''
-        sheet_ranges[f'{letter}51'].value = ''
+        for a in range(2, 51):
+            sheet_ranges[f'{letter}{a}'].value = ''
         lb.save('presets.xlsx')
     else:
         lb = load_workbook(filename='presets.xlsx')
@@ -822,56 +803,8 @@ def save_exe_preset2():
         preset_text.delete('1.0', 'end')
 
         sheet_ranges[f'{letter}1'].value = 'Preset 2'
-        sheet_ranges[f'{letter}2'].value = ''
-        sheet_ranges[f'{letter}3'].value = ''
-        sheet_ranges[f'{letter}4'].value = ''
-        sheet_ranges[f'{letter}5'].value = ''
-        sheet_ranges[f'{letter}6'].value = ''
-        sheet_ranges[f'{letter}7'].value = ''
-        sheet_ranges[f'{letter}8'].value = ''
-        sheet_ranges[f'{letter}9'].value = ''
-        sheet_ranges[f'{letter}10'].value = ''
-        sheet_ranges[f'{letter}11'].value = ''
-        sheet_ranges[f'{letter}12'].value = ''
-        sheet_ranges[f'{letter}13'].value = ''
-        sheet_ranges[f'{letter}14'].value = ''
-        sheet_ranges[f'{letter}15'].value = ''
-        sheet_ranges[f'{letter}16'].value = ''
-        sheet_ranges[f'{letter}17'].value = ''
-        sheet_ranges[f'{letter}18'].value = ''
-        sheet_ranges[f'{letter}19'].value = ''
-        sheet_ranges[f'{letter}20'].value = ''
-        sheet_ranges[f'{letter}21'].value = ''
-        sheet_ranges[f'{letter}22'].value = ''
-        sheet_ranges[f'{letter}23'].value = ''
-        sheet_ranges[f'{letter}24'].value = ''
-        sheet_ranges[f'{letter}25'].value = ''
-        sheet_ranges[f'{letter}26'].value = ''
-        sheet_ranges[f'{letter}27'].value = ''
-        sheet_ranges[f'{letter}28'].value = ''
-        sheet_ranges[f'{letter}29'].value = ''
-        sheet_ranges[f'{letter}30'].value = ''
-        sheet_ranges[f'{letter}31'].value = ''
-        sheet_ranges[f'{letter}32'].value = ''
-        sheet_ranges[f'{letter}33'].value = ''
-        sheet_ranges[f'{letter}34'].value = ''
-        sheet_ranges[f'{letter}35'].value = ''
-        sheet_ranges[f'{letter}36'].value = ''
-        sheet_ranges[f'{letter}37'].value = ''
-        sheet_ranges[f'{letter}38'].value = ''
-        sheet_ranges[f'{letter}39'].value = ''
-        sheet_ranges[f'{letter}40'].value = ''
-        sheet_ranges[f'{letter}41'].value = ''
-        sheet_ranges[f'{letter}42'].value = ''
-        sheet_ranges[f'{letter}43'].value = ''
-        sheet_ranges[f'{letter}44'].value = ''
-        sheet_ranges[f'{letter}45'].value = ''
-        sheet_ranges[f'{letter}46'].value = ''
-        sheet_ranges[f'{letter}47'].value = ''
-        sheet_ranges[f'{letter}48'].value = ''
-        sheet_ranges[f'{letter}49'].value = ''
-        sheet_ranges[f'{letter}50'].value = ''
-        sheet_ranges[f'{letter}51'].value = ''
+        for a in range(2, 51):
+            sheet_ranges[f'{letter}{a}'].value = ''
         lb.save('presets.xlsx')
     else:
         lb = load_workbook(filename='presets.xlsx')
@@ -934,6 +867,7 @@ def save_exe_preset2():
         sheet_ranges[f'{letter}51'].value = bench_text.get('1.0', 'end').split('\n')[0]
         lb.save('presets.xlsx')
     return None
+
 
 def save_exe_preset3():
     if preset_text.get('1.0', 'end').split('\n')[0] == '':
@@ -1076,56 +1010,8 @@ def save_exe_preset3():
         preset_text.delete('1.0', 'end')
 
         sheet_ranges[f'{letter}1'].value = 'Preset 3'
-        sheet_ranges[f'{letter}2'].value = ''
-        sheet_ranges[f'{letter}3'].value = ''
-        sheet_ranges[f'{letter}4'].value = ''
-        sheet_ranges[f'{letter}5'].value = ''
-        sheet_ranges[f'{letter}6'].value = ''
-        sheet_ranges[f'{letter}7'].value = ''
-        sheet_ranges[f'{letter}8'].value = ''
-        sheet_ranges[f'{letter}9'].value = ''
-        sheet_ranges[f'{letter}10'].value = ''
-        sheet_ranges[f'{letter}11'].value = ''
-        sheet_ranges[f'{letter}12'].value = ''
-        sheet_ranges[f'{letter}13'].value = ''
-        sheet_ranges[f'{letter}14'].value = ''
-        sheet_ranges[f'{letter}15'].value = ''
-        sheet_ranges[f'{letter}16'].value = ''
-        sheet_ranges[f'{letter}17'].value = ''
-        sheet_ranges[f'{letter}18'].value = ''
-        sheet_ranges[f'{letter}19'].value = ''
-        sheet_ranges[f'{letter}20'].value = ''
-        sheet_ranges[f'{letter}21'].value = ''
-        sheet_ranges[f'{letter}22'].value = ''
-        sheet_ranges[f'{letter}23'].value = ''
-        sheet_ranges[f'{letter}24'].value = ''
-        sheet_ranges[f'{letter}25'].value = ''
-        sheet_ranges[f'{letter}26'].value = ''
-        sheet_ranges[f'{letter}27'].value = ''
-        sheet_ranges[f'{letter}28'].value = ''
-        sheet_ranges[f'{letter}29'].value = ''
-        sheet_ranges[f'{letter}30'].value = ''
-        sheet_ranges[f'{letter}31'].value = ''
-        sheet_ranges[f'{letter}32'].value = ''
-        sheet_ranges[f'{letter}33'].value = ''
-        sheet_ranges[f'{letter}34'].value = ''
-        sheet_ranges[f'{letter}35'].value = ''
-        sheet_ranges[f'{letter}36'].value = ''
-        sheet_ranges[f'{letter}37'].value = ''
-        sheet_ranges[f'{letter}38'].value = ''
-        sheet_ranges[f'{letter}39'].value = ''
-        sheet_ranges[f'{letter}40'].value = ''
-        sheet_ranges[f'{letter}41'].value = ''
-        sheet_ranges[f'{letter}42'].value = ''
-        sheet_ranges[f'{letter}43'].value = ''
-        sheet_ranges[f'{letter}44'].value = ''
-        sheet_ranges[f'{letter}45'].value = ''
-        sheet_ranges[f'{letter}46'].value = ''
-        sheet_ranges[f'{letter}47'].value = ''
-        sheet_ranges[f'{letter}48'].value = ''
-        sheet_ranges[f'{letter}49'].value = ''
-        sheet_ranges[f'{letter}50'].value = ''
-        sheet_ranges[f'{letter}51'].value = ''
+        for a in range(2, 51):
+            sheet_ranges[f'{letter}{a}'].value = ''
         lb.save('presets.xlsx')
     else:
         lb = load_workbook(filename='presets.xlsx')
@@ -1188,6 +1074,7 @@ def save_exe_preset3():
         sheet_ranges[f'{letter}51'].value = bench_text.get('1.0', 'end').split('\n')[0]
         lb.save('presets.xlsx')
     return None
+
 
 root = tk.Tk()
 w, h = root.winfo_screenwidth(), root.winfo_screenheight()
@@ -1523,7 +1410,6 @@ preset_text.bind("<Tab>", focus_next_window)
 lb = load_workbook(filename='presets.xlsx')
 ws = lb.active
 sheet_ranges = lb['Sheet']
-
 
 btn_preset_text = tk.StringVar()
 btn_preset_text.set(sheet_ranges['A1'].value)
