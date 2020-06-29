@@ -120,7 +120,7 @@ def checkerror():
     if rp.get() == False and nrp.get() == False and rt.get() == False and kj.get() == False:
         error += 'Result\n'
     if bhotswap.get() == False and bvibration.get() == False and bnoise.get() == False and bheat.get() == False and \
-            bnff.get() == False and bcable.get() == False:
+            bnff.get() == False and bcable.get() == False and bimpact.get() == False:
         error += 'Preventative Measure\n'
     if bapp_nff.get() == False and bapp_oil.get() == False and bapp_impact.get() == False and bapp_cable.get() == False \
             and bapp_filterglass.get() == False:
@@ -213,17 +213,19 @@ def suspected_cause():
     if bhotswap.get() == True:
         str_out += '- Electrical component damage due to hot swap.\n'
     if bvibration.get() == True:
-        str_out += '- Internal component damage due to vibration\n'
+        str_out += '- Internal component damage due to vibration.\n'
     if bnoise.get() == True:
-        str_out += '- Electrical component damage due to inductive noise\n'
+        str_out += '- Electrical component damage due to inductive noise.\n'
     if bheat.get() == True:
-        str_out += '- Internal component damage due to heat\n'
+        str_out += '- Internal component damage due to heat.\n'
     if bcable.get() == True:
-        str_out += '- Cable damage due to impact or improper use of the cable\n'
+        str_out += '- Cable damage due to impact or improper use of the cable.\n'
     if bnff.get() == True:
-        str_out = '- No faults were found\n'
+        str_out = '- No faults were found.\n'
     if bsurge.get() == True:
-        str_out += '- An application of over voltage/current in the form of an electrical surge\n'
+        str_out += '- An application of over voltage/current in the form of an electrical surge.\n'
+    if bimpact.get() == True:
+        str_out += '- Impact damage to the unit.\n'
     return str_out
 
 
@@ -264,6 +266,8 @@ def preventative_measure():
         str_out += 'To prevent cable damage, please make sure to protect the cable from impact and pulling. '
     if bnff.get() == True:
         str_out += 'No faults were found'
+    if bimpact.get() == True:
+        str_out += 'Please make sure not to subject the unit to impact damage.'
     else:
         pass
     return str_out
@@ -282,7 +286,7 @@ def makeform():
             rp.get() == False and nrp.get() == False and rt.get() == False and kj.get() == False or \
             bhotswap.get() == False and bvibration.get() == False and \
             bnoise.get() == False and bheat.get() == False and bnff.get() == False and bcable.get() == False and \
-            bsurge.get() == False or bapp_nff.get() == False and bapp_oil.get() == False and \
+            bsurge.get() == False and bimpact.get() == False or bapp_nff.get() == False and bapp_oil.get() == False and \
             bapp_impact.get() == False and bapp_cable.get() == False and bapp_filterglass.get() == False or \
             bsym_cable.get() == False and \
             bsym_inout.get() == False and bsym_nocom.get() == False and bsym_noint.get() == False and \
@@ -412,8 +416,8 @@ def makeform():
     cliping += '< Preventative Measure >\n' + preventative_measure()
 
     try:
-        # pdf.output('I:/PRD/Check Sheets/RSS/' + rp_save + ' - ' + serial_save + '.pdf', 'F')
-        pdf.output(rp_save + ' - ' + serial_save + '.pdf', 'F')
+        pdf.output('I:/PRD/Check Sheets/RSS/' + rp_save + ' - ' + serial_save + '.pdf', 'F')
+        # pdf.output(rp_save + ' - ' + serial_save + '.pdf', 'F')
     except OSError:
         fileopen()
         return None
@@ -1215,6 +1219,7 @@ bheat = tk.BooleanVar()
 bsurge = tk.BooleanVar()
 bnff = tk.BooleanVar()
 bcable = tk.BooleanVar()
+bimpact = tk.BooleanVar()
 
 bapp_nff = tk.BooleanVar()
 bapp_cable = tk.BooleanVar()
@@ -1331,6 +1336,9 @@ kjchk_label.grid(row=18, column=3)
 key_label = tk.Label(text=' Suspected Cause/Preventative Measures ')
 key_label.grid(row=14, column=4)
 
+key_label = tk.Label(text=' Suspected Cause/Preventative Measures ')
+key_label.grid(row=14, column=5)
+
 hot_swap = tk.Checkbutton(root, text="Hot Swap",
                           onvalue=1, offvalue=0, height=1,
                           width=25, variable=bhotswap)
@@ -1359,12 +1367,17 @@ heat.grid(row=19, column=4)
 cable = tk.Checkbutton(root, text="Cable Damage",
                        onvalue=1, offvalue=0, height=1,
                        width=25, variable=bcable)
-cable.grid(row=20, column=4)
+cable.grid(row=15, column=5)
+
+impact = tk.Checkbutton(root, text="Impact",
+                       onvalue=1, offvalue=0, height=1,
+                       width=25, variable=bimpact)
+impact.grid(row=16, column=5)
 
 nff = tk.Checkbutton(root, text="NFF",
                      onvalue=1, offvalue=0, height=1,
                      width=25, variable=bnff)
-nff.grid(row=21, column=4)
+nff.grid(row=17, column=5)
 
 '''Form'''
 
