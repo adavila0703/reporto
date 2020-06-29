@@ -312,7 +312,7 @@ def makeform():
              '          Time:' + '  ' + bench_text.get('1.0', 'end'))
     pdf.ln(h=15)
     pdf.set_font('Arial', 'IB', 16)
-    pdf.cell(40, 10, '< Repair History >', ln=1)
+    pdf.cell(40, 10, '< RP History >', ln=1)
     pdf.set_font('Arial', 'B', 12)
     pdf.cell(40, 10, 'RP#: ' + his_rp_text.get('1.0', 'end'), ln=1)
     pdf.cell(40, 10, 'Date:' + his_comp_date_text.get('1.0', 'end'), ln=1)
@@ -371,6 +371,7 @@ def makeform():
         sum_out = 'This unit was sent back to the customer in the condition it was received'
     elif kj.get() == True:
         sum_out = 'This unit was sent to KJ'
+
     pdf.cell(40, 10, sum_out, ln=1)
     pdf.ln(h=15)
     pdf.set_font('Arial', 'IB', 22)
@@ -1146,7 +1147,7 @@ bench_text = tk.Text(root, height=1, width=20)
 bench_text.grid(row=2, column=4)
 bench_text.bind("<Tab>", focus_next_window)
 
-his_label = tk.Label(text='Repair History')
+his_label = tk.Label(text='RP History')
 his_label.grid(row=1, column=5)
 
 his_rp = tk.Label(text='RP#')
