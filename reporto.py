@@ -303,21 +303,61 @@ def makeform():
     pdf.ln(h=15)
     pdf.set_font('Arial', 'B', 12)
     pdf.dashed_line(10, 30, 110, 30, 1, 10)
-    pdf.cell(40, 10, 'RP#:' + '  ' + rpnum_text.get('1.0', 'end') +
-             '          Item:' + '  ' + item_text.get('1.0', 'end') +
-             '          Serial:' + '  ' + serial_text.get('1.0', 'end'))
+    if rpnum_text.get('1.0', 'end').strip() == '':
+        pdf.cell(40, 10, 'RP#: ' + 'None          ')
+    else:
+        pdf.cell(40, 10, 'RP#: ' + rpnum_text.get('1.0', 'end') + '          ')
+
+    if item_text.get('1.0', 'end').strip() == '':
+        pdf.cell(40, 10, 'Item: ' + 'None          ')
+    else:
+        pdf.cell(40, 10, 'Item: ' + item_text.get('1.0', 'end') + '          ')
+
+    if serial_text.get('1.0', 'end').strip() == '':
+        pdf.cell(40, 10, 'Serial: ' + 'None          ')
+    else:
+        pdf.cell(40, 10, 'Serial: ' + serial_text.get('1.0', 'end') + '          ')
+
     pdf.ln(h=15)
-    pdf.cell(40, 10, 'Keyword:' + '  ' + key_text.get('1.0', 'end') +
-             '          PIC:' + '  ' + pic_text.get('1.0', 'end') +
-             '          Time:' + '  ' + bench_text.get('1.0', 'end'))
+
+    if key_text.get('1.0', 'end').strip() == '':
+        pdf.cell(40, 10, 'Keyword: ' + 'None          ')
+    else:
+        pdf.cell(40, 10, 'Keyword: ' + key_text.get('1.0', 'end'))
+
+    if pic_text.get('1.0', 'end').strip() == '':
+        pdf.cell(40, 10, 'PIC: ' + 'None          ')
+    else:
+        pdf.cell(40, 10, 'PIC: ' + pic_text.get('1.0', 'end'))
+
+    if bench_text.get('1.0', 'end').strip() == '':
+        pdf.cell(40, 10, 'Time: ' + 'None          ')
+    else:
+        pdf.cell(40, 10, 'Time: ' + bench_text.get('1.0', 'end'))
+
     pdf.ln(h=15)
     pdf.set_font('Arial', 'IB', 16)
     pdf.cell(40, 10, '< RP History >', ln=1)
     pdf.set_font('Arial', 'B', 12)
-    pdf.cell(40, 10, 'RP#: ' + his_rp_text.get('1.0', 'end'), ln=1)
-    pdf.cell(40, 10, 'Date:' + his_comp_date_text.get('1.0', 'end'), ln=1)
-    pdf.cell(40, 10, 'Symptom: ' + his_symptom_text.get('1.0', 'end'), ln=1)
-    pdf.cell(40, 10, 'Result: ' + his_result_text.get('1.0', 'end'), ln=1)
+    if his_rp_text.get('1.0', 'end').strip() == '':
+        pdf.cell(40, 10, 'RP#: ' + 'None', ln=1)
+    else:
+        pdf.cell(40, 10, 'RP#: ' + his_rp_text.get('1.0', 'end'), ln=1)
+
+    if his_comp_date_text.get('1.0', 'end').strip() == '':
+        pdf.cell(40, 10, 'Date: ' + 'None', ln=1)
+    else:
+        pdf.cell(40, 10, 'Date:' + his_comp_date_text.get('1.0', 'end'), ln=1)
+
+    if his_symptom_text.get('1.0', 'end').strip() == '':
+        pdf.cell(40, 10, 'Symptom: ' + 'None', ln=1)
+    else:
+        pdf.cell(40, 10, 'Symptom: ' + his_symptom_text.get('1.0', 'end'), ln=1)
+
+    if his_result_text.get('1.0', 'end').strip() == '':
+        pdf.cell(40, 10, 'Result: ' + 'None', ln=1)
+    else:
+        pdf.cell(40, 10, 'Result: ' + his_result_text.get('1.0', 'end'), ln=1)
     pdf.line(10, 30, 50, 30)
     pdf.ln(h=15)
     pdf.set_font('Arial', 'IB', 16)
@@ -334,9 +374,19 @@ def makeform():
     pdf.cell(40, 10, '< Tests Conducted >', ln=1)
     pdf.set_font('Arial', '', 12)
     pdf.cell(40, 10, tests_text.get('1.0', 'end'), ln=1)
+    pdf.cell(40, 10, '< Failure Information >', ln=1)
+    pdf.set_font('Arial', '', 12)
     pdf.ln(h=15)
-    pdf.cell(40, 10, 'Failed Board: ' + fb_text.get('1.0', 'end'), ln=1)
-    pdf.cell(40, 10, 'Location of Component: ' + comp_text.get('1.0', 'end'), ln=1)
+
+    if fb_text.get('1.0', 'end').strip() == '':
+        pdf.cell(40, 10, 'Failed Board: ' + ' None', ln=1)
+    else:
+        pdf.cell(40, 10, 'Failed Board: ' + fb_text.get('1.0', 'end'), ln=1)
+
+    if comp_text.get('1.0', 'end').strip() == '':
+        pdf.cell(40, 10, 'Location of Component: ' + 'None', ln=1)
+    else:
+        pdf.cell(40, 10, 'Location of Component: ' + comp_text.get('1.0', 'end'), ln=1)
     pdf.cell(40, 10, 'Failed Structure Part: ' + structure_text.get('1.0', 'end'), ln=1)
 
     if parts_text.get('1.0', 'end').split('\n')[0] == '':
@@ -417,8 +467,8 @@ def makeform():
     cliping += '< Preventative Measure >\n' + preventative_measure()
 
     try:
-        pdf.output('I:/PRD/Check Sheets/RSS/' + rp_save + ' - ' + serial_save + '.pdf', 'F')
-        # pdf.output(rp_save + ' - ' + serial_save + '.pdf', 'F')
+        #pdf.output('I:/PRD/Check Sheets/RSS/' + rp_save + ' - ' + serial_save + '.pdf', 'F')
+        pdf.output(rp_save + ' - ' + serial_save + '.pdf', 'F')
     except OSError:
         fileopen()
         return None
@@ -1454,5 +1504,8 @@ btn_example.grid(row=31, column=2)
 
 btn_example = tk.Button(root, height=1, width=15, text="Help", command=clearexample)
 btn_example.grid(row=32, column=2)
+
+angel_label = tk.Label(text='Created by Angel Davila')
+angel_label.grid(row=32, column=1)
 
 root.mainloop()
