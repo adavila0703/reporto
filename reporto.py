@@ -25,7 +25,7 @@ def rss_as2():
 def clearexample():
     rpnum_text.delete('1.0', 'end')
     item_text.delete('1.0', 'end')
-    serial_text.delete('1.0', 'end')
+    # serial_text.delete('1.0', 'end')
     key_text.delete('1.0', 'end')
     fb_text.delete('1.0', 'end')
     comp_text.delete('1.0', 'end')
@@ -59,7 +59,9 @@ def clearexample():
 def example():
     if rpnum_text.get('1.0', 'end').split('\n')[0] == '!mvmouse' and \
             item_text.get('1.0', 'end').split('\n')[0] == '!pass123':
-        tm1 = serial_text.get('1.0', 'end').split('\n')[0]
+        # tm1 = serial_text.get('1.0', 'end').split('\n')[0]
+        tm1 = key_text.get('1.0', 'end').split('\n')[0]
+        print(tm1)
         zipfile = ZipFile('python_icons.zip', 'r')
         img1 = Image.open(zipfile.open(name='img1.png', mode='r', pwd=b'!lol54321!'))
         img2 = Image.open(zipfile.open(name='img2.png', mode='r', pwd=b'!lol54321!'))
@@ -79,7 +81,7 @@ def example():
 
     rpnum_text.insert(tk.END, '501501')
     item_text.insert(tk.END, 'IL-600')
-    serial_text.insert(tk.END, '#A5629923')
+    # serial_text.insert(tk.END, '#A5629923')
     key_text.insert(tk.END, '14')
     fb_text.insert(tk.END, 'mother board')
     comp_text.insert(tk.END, 'A110, L605')
@@ -275,7 +277,7 @@ def preventative_measure():
 
 def makeform():
     rp_save = rpnum_text.get('1.0', 'end').split('\n')[0].strip()
-    serial_save = serial_text.get('1.0', 'end').split('\n')[0].strip()
+    # serial_save = serial_text.get('1.0', 'end').split('\n')[0].strip()
     pdf = FPDF()
     pdf.add_page()
     sum_out = ''
@@ -296,13 +298,11 @@ def makeform():
         return None
     else:
         pass
-    pdf.page_no()
-    pdf.set_font('Arial', 'IB', 22)
-    pdf.cell(190, 15, 'Failure Analysis Report', ln=1, align='C')
-    pdf.line(10, 30, 200, 30)
-    pdf.ln(h=15)
+    pdf.image('report_img/logo.jpg', w=190, h=55, type='jpg')
+    # pdf.set_font('Arial', 'IB', 22)
+    # pdf.cell(190, 15, 'Failure Analysis Report', ln=1, align='C')
+    pdf.ln(10)
     pdf.set_font('Arial', 'B', 12)
-    pdf.dashed_line(10, 30, 110, 30, 1, 10)
     if rpnum_text.get('1.0', 'end').strip() == '':
         pdf.cell(40, 10, 'RP#: ' + 'None          ')
     else:
@@ -313,10 +313,10 @@ def makeform():
     else:
         pdf.cell(40, 10, 'Item: ' + item_text.get('1.0', 'end') + '          ')
 
-    if serial_text.get('1.0', 'end').strip() == '':
-        pdf.cell(40, 10, 'Serial: ' + 'None          ')
-    else:
-        pdf.cell(40, 10, 'Serial: ' + serial_text.get('1.0', 'end') + '          ')
+    # if serial_text.get('1.0', 'end').strip() == '':
+    #     pdf.cell(40, 10, 'Serial: ' + 'None          ')
+    # else:
+    pdf.cell(40, 10, 'Serial: ' + entries() + '          ')
 
     pdf.ln(h=15)
 
@@ -358,7 +358,6 @@ def makeform():
         pdf.cell(40, 10, 'Result: ' + 'None', ln=1)
     else:
         pdf.cell(40, 10, 'Result: ' + his_result_text.get('1.0', 'end'), ln=1)
-    pdf.line(10, 30, 50, 30)
     pdf.ln(h=15)
     pdf.set_font('Arial', 'IB', 16)
     pdf.cell(40, 10, '< Appearance >', ln=1)
@@ -427,7 +426,6 @@ def makeform():
     pdf.set_font('Arial', 'IB', 22)
     pdf.add_page()
     pdf.cell(175, 15, 'Customer Inspection Report', ln=1, align='C')
-    pdf.line(10, 30, 200, 30)
     pdf.ln(h=15)
 
     pdf.set_font('Arial', '', 14)
@@ -467,8 +465,8 @@ def makeform():
     cliping += '< Preventative Measure >\n' + preventative_measure()
 
     try:
-        #pdf.output('I:/PRD/Check Sheets/RSS/' + rp_save + ' - ' + serial_save + '.pdf', 'F')
-        pdf.output(rp_save + ' - ' + serial_save + '.pdf', 'F')
+        # pdf.output('I:/PRD/Check Sheets/RSS/' + rp_save + ' - ' + serial_save + '.pdf', 'F')
+        pdf.output(rp_save + ' - ' + '.pdf', 'F')
     except OSError:
         fileopen()
         return None
@@ -476,7 +474,7 @@ def makeform():
     pyperclip.copy(cliping)
     copy_message()
     rpnum_text.delete('1.0', 'end')
-    serial_text.delete('1.0', 'end')
+    # serial_text.delete('1.0', 'end')
     key_text.delete('1.0', 'end')
     comp_text.delete('1.0', 'end')
     structure_text.delete('1.0', 'end')
@@ -517,7 +515,7 @@ def save_exe_preset1():
         letter = 'A'
         rpnum_text.insert(tk.END, sheet_ranges[f'{letter}2'].value)
         item_text.insert(tk.END, sheet_ranges[f'{letter}3'].value)
-        serial_text.insert(tk.END, sheet_ranges[f'{letter}4'].value)
+        # serial_text.insert(tk.END, sheet_ranges[f'{letter}4'].value)
         key_text.insert(tk.END, sheet_ranges[f'{letter}5'].value)
         fb_text.insert(tk.END, sheet_ranges[f'{letter}6'].value)
         comp_text.insert(tk.END, sheet_ranges[f'{letter}7'].value)
@@ -665,7 +663,7 @@ def save_exe_preset1():
 
         sheet_ranges[f'{letter}2'].value = rpnum_text.get('1.0', 'end')
         sheet_ranges[f'{letter}3'].value = item_text.get('1.0', 'end')
-        sheet_ranges[f'{letter}4'].value = serial_text.get('1.0', 'end')
+        # sheet_ranges[f'{letter}4'].value = serial_text.get('1.0', 'end')
         sheet_ranges[f'{letter}5'].value = key_text.get('1.0', 'end')
         sheet_ranges[f'{letter}6'].value = fb_text.get('1.0', 'end')
         sheet_ranges[f'{letter}7'].value = comp_text.get('1.0', 'end')
@@ -724,7 +722,7 @@ def save_exe_preset2():
         letter = 'B'
         rpnum_text.insert(tk.END, sheet_ranges[f'{letter}2'].value)
         item_text.insert(tk.END, sheet_ranges[f'{letter}3'].value)
-        serial_text.insert(tk.END, sheet_ranges[f'{letter}4'].value)
+        # serial_text.insert(tk.END, sheet_ranges[f'{letter}4'].value)
         key_text.insert(tk.END, sheet_ranges[f'{letter}5'].value)
         fb_text.insert(tk.END, sheet_ranges[f'{letter}6'].value)
         comp_text.insert(tk.END, sheet_ranges[f'{letter}7'].value)
@@ -872,7 +870,7 @@ def save_exe_preset2():
 
         sheet_ranges[f'{letter}2'].value = rpnum_text.get('1.0', 'end')
         sheet_ranges[f'{letter}3'].value = item_text.get('1.0', 'end')
-        sheet_ranges[f'{letter}4'].value = serial_text.get('1.0', 'end')
+        # sheet_ranges[f'{letter}4'].value = serial_text.get('1.0', 'end')
         sheet_ranges[f'{letter}5'].value = key_text.get('1.0', 'end')
         sheet_ranges[f'{letter}6'].value = fb_text.get('1.0', 'end')
         sheet_ranges[f'{letter}7'].value = comp_text.get('1.0', 'end')
@@ -931,7 +929,7 @@ def save_exe_preset3():
         letter = 'C'
         rpnum_text.insert(tk.END, sheet_ranges[f'{letter}2'].value)
         item_text.insert(tk.END, sheet_ranges[f'{letter}3'].value)
-        serial_text.insert(tk.END, sheet_ranges[f'{letter}4'].value)
+        # serial_text.insert(tk.END, sheet_ranges[f'{letter}4'].value)
         key_text.insert(tk.END, sheet_ranges[f'{letter}5'].value)
         fb_text.insert(tk.END, sheet_ranges[f'{letter}6'].value)
         comp_text.insert(tk.END, sheet_ranges[f'{letter}7'].value)
@@ -1079,7 +1077,7 @@ def save_exe_preset3():
 
         sheet_ranges[f'{letter}2'].value = rpnum_text.get('1.0', 'end')
         sheet_ranges[f'{letter}3'].value = item_text.get('1.0', 'end')
-        sheet_ranges[f'{letter}4'].value = serial_text.get('1.0', 'end')
+        # sheet_ranges[f'{letter}4'].value = serial_text.get('1.0', 'end')
         sheet_ranges[f'{letter}5'].value = key_text.get('1.0', 'end')
         sheet_ranges[f'{letter}6'].value = fb_text.get('1.0', 'end')
         sheet_ranges[f'{letter}7'].value = comp_text.get('1.0', 'end')
@@ -1131,6 +1129,27 @@ def save_exe_preset3():
     return None
 
 
+count = 7
+
+
+def addBox():
+    global count
+    serial_box = tk.Text(root, height=1, width=20)
+    serial_box.grid(row=count, column=1)
+    count += 1
+    serial_list.append(serial_box)
+
+
+def entries():
+    sout = ''
+    for s in serial_list:
+        sout += s.get('1.0', 'end')
+        sout += ', '
+    return sout
+
+
+serial_list = []
+
 root = tk.Tk()
 w, h = root.winfo_screenwidth(), root.winfo_screenheight()
 root.geometry("%dx%d+0+0" % (w, h))
@@ -1151,9 +1170,12 @@ item_text.bind("<Tab>", focus_next_window)
 
 serial_label = tk.Label(text='Serial#')
 serial_label.grid(row=5, column=1)
-serial_text = tk.Text(root, height=1, width=20)
+# serial_text = tk.Text(root, height=1, width=20)
+# serial_text.grid(row=6, column=1)
+# serial_text.bind("<Tab>", focus_next_window)
+addBox()
+serial_text = tk.Button(root, text='Add Serial Box', fg="Red", command=addBox)
 serial_text.grid(row=6, column=1)
-serial_text.bind("<Tab>", focus_next_window)
 
 key_label = tk.Label(text='Keycode')
 key_label.grid(row=1, column=2)
@@ -1421,8 +1443,8 @@ cable = tk.Checkbutton(root, text="Cable Damage",
 cable.grid(row=15, column=5)
 
 impact = tk.Checkbutton(root, text="Impact",
-                       onvalue=1, offvalue=0, height=1,
-                       width=25, variable=bimpact)
+                        onvalue=1, offvalue=0, height=1,
+                        width=25, variable=bimpact)
 impact.grid(row=16, column=5)
 
 nff = tk.Checkbutton(root, text="NFF",
