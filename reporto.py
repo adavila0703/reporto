@@ -11,15 +11,10 @@ from fpdf import FPDF
 from zipfile import ZipFile
 from PIL import Image
 
-
 def resource_path(relative_path):
     if hasattr(sys, '_MEIPASS'):
         return os.path.join(sys._MEIPASS, relative_path)
     return os.path.join(os.path.abspath("."), relative_path)
-
-
-def rss_as2():
-    return None
 
 
 def clearexample():
@@ -138,44 +133,44 @@ def checkerror():
 
 
 def apperance_check():
-    str_out = 'With a visual inspection'
+    str_out = 'After a thorough external visual inspection, the following was found:\n'
 
     if bapp_nff.get() == True:
-        str_out += ', there were no major damage to the exterior of the unit'
+        str_out += '-No major damage was found to the exterior.\n'
     if bapp_cable.get() == True:
-        str_out += ', the exterior cable was found damaged'
+        str_out += '-The head cable was found damaged.\n'
     if bapp_impact.get() == True:
-        str_out += ', the exterior case was found with impact damage'
+        str_out += '-The case was found with impact marks.\n'
     if bapp_oil.get() == True:
-        str_out += ', the exterior case was found with oil'
+        str_out += '-Oil was found covering the exterior.\n'
     if bapp_filterglass.get() == True:
-        str_out += ', the exterior filter glass was found damaged'
-    return str_out + '.'
+        str_out += '-The filter glass damage.\n'
+    return str_out
 
 
 def operation_check():
-    str_out = 'With an operation check, the symptom was replicated'
+    str_out = 'The following was found during a full function test:\n'
 
     if bsym_nocom.get() == True:
-        str_out += ', the communication was abnormal'
+        str_out += '-Unit communication was abnormal\n'
     if bsym_nolaser.get() == True:
-        str_out += ', the unit was not emitting a laser'
+        str_out += '-No laser output.\n'
     if bsym_nopower.get() == True:
-        str_out += ', the unit was not accepting power'
+        str_out += '-The unit did not power on.\n'
     if bsym_noint.get() == True:
-        str_out += ', the unit would not initialize properly'
+        str_out += 'The unit would not initialize properly.\n'
     if bsym_cable.get() == True:
         str_out = 'With an operation check, a known good cable was replaced in order to conduct a full function ' \
-                  'check'
+                  'check\n'
     if bsym_inout.get() == True:
-        str_out += ', there was abnormalities found with either the inputs or the outputs'
+        str_out += '-There were abnormalities found with either the inputs or the outputs\n'
     if bsym_nffstruct.get() == True:
         str_out = 'With an operation check, although there were some structural damage to the unit, the unit is still' \
-                  ' operational'
+                  ' operational\n'
     if bsym_symnff.get() == True:
-        str_out = 'With an operation check, the symptom was not replicated, the unit passed all tests'
+        str_out = 'With an operation check, the symptom was not replicated, the unit passed all tests\n'
 
-    return str_out + '.'
+    return str_out
 
 
 def internal_check():
@@ -207,7 +202,7 @@ def internal_check():
             str_out += f' the {struct} was found damaged'
     else:
         str_out += 'There was no need to disassemble the unit'
-    return str_out + '.'
+    return str_out + '.\n'
 
 
 def suspected_cause():
@@ -236,18 +231,18 @@ def conclusion():
     if rp.get() == True:
         str_out = 'To bring this unit back to full functionality, the unit will be repaired and tested to ' \
                   'meet manufacturing specifications. A full operation and function check will be conducted to ' \
-                  'confirm normal operation.'
+                  'confirm normal operation.\n'
     if nrp.get() == True:
         str_out = 'This unit cannot be repaired as either it is damaged beyond repairing capabilities or the repair ' \
                   'will approach the cost of a new unit. This unit will be sent back in the condition it was ' \
                   'received. We do not recommend putting this unit back on a production line, as we cannot guarantee' \
-                  ' the reliability of its full functionality.'
+                  ' the reliability of its full functionality.\n'
     if rt.get() == True:
         str_out = 'Because we were not able to replicate the described symptom, the unit will be returned in the ' \
-                  'condition it was received.'
+                  'condition it was received.\n'
     if kj.get() == True:
         str_out = 'The internal boards will be replaced to that of the equal repair cost and as a result, the' \
-                  ' unit will have a new serial number.'
+                  ' unit will have a new serial number.\n'
     return str_out
 
 
@@ -302,7 +297,7 @@ def makeform():
     # pdf.set_font('Arial', 'IB', 22)
     # pdf.cell(190, 15, 'Failure Analysis Report', ln=1, align='C')
     pdf.ln(10)
-    pdf.set_font('Arial', 'B', 12)
+    pdf.set_font('Arial', 'B', 14)
     if rpnum_text.get('1.0', 'end').strip() == '':
         pdf.cell(40, 10, 'RP#: ' + 'None          ')
     else:
@@ -316,7 +311,7 @@ def makeform():
     # if serial_text.get('1.0', 'end').strip() == '':
     #     pdf.cell(40, 10, 'Serial: ' + 'None          ')
     # else:
-    pdf.cell(40, 10, 'Serial: ' + entries() + '          ')
+    pdf.cell(40, 10, 'Serial: ' + entries())
 
     pdf.ln(h=15)
 
@@ -335,19 +330,26 @@ def makeform():
     else:
         pdf.cell(40, 10, 'Time: ' + bench_text.get('1.0', 'end'))
 
+    if pic_text.get('1.0', 'end').strip() == 'Angel' or pic_text.get('1.0', 'end').strip() == 'angel':
+        pdf.image('report_img/angel.jpg', y=85, x=125, w=20, h=20, type='jpg')
+    elif pic_text.get('1.0', 'end').strip() == 'Grant' or pic_text.get('1.0', 'end').strip() == 'grant':
+        pdf.image('report_img/grant.jpg', y=85, x=125, w=20, h=20, type='jpg')
+    elif pic_text.get('1.0', 'end').strip() == 'Adolfo' or pic_text.get('1.0', 'end').strip() == 'adolfo':
+        pdf.image('report_img/adolfo.jpg', y=85, x=125, w=20, h=20, type='jpg')
+
     pdf.ln(h=15)
-    pdf.set_font('Arial', 'IB', 16)
-    pdf.cell(40, 10, '< RP History >', ln=1)
+    pdf.image('report_img/rp-history.jpg', w=190, h=12, type='jpg')
     pdf.set_font('Arial', 'B', 12)
+
     if his_rp_text.get('1.0', 'end').strip() == '':
         pdf.cell(40, 10, 'RP#: ' + 'None', ln=1)
     else:
-        pdf.cell(40, 10, 'RP#: ' + his_rp_text.get('1.0', 'end'), ln=1)
+        pdf.cell(40, 10, 'RP#: ' + his_rp_text.get('1.0', 'end'))
 
     if his_comp_date_text.get('1.0', 'end').strip() == '':
         pdf.cell(40, 10, 'Date: ' + 'None', ln=1)
     else:
-        pdf.cell(40, 10, 'Date:' + his_comp_date_text.get('1.0', 'end'), ln=1)
+        pdf.cell(40, 10, 'Date:' + his_comp_date_text.get('1.0', 'end'))
 
     if his_symptom_text.get('1.0', 'end').strip() == '':
         pdf.cell(40, 10, 'Symptom: ' + 'None', ln=1)
@@ -358,23 +360,22 @@ def makeform():
         pdf.cell(40, 10, 'Result: ' + 'None', ln=1)
     else:
         pdf.cell(40, 10, 'Result: ' + his_result_text.get('1.0', 'end'), ln=1)
+
     pdf.ln(h=15)
-    pdf.set_font('Arial', 'IB', 16)
-    pdf.cell(40, 10, '< Appearance >', ln=1)
-    pdf.set_font('Arial', '', 12)
+    pdf.image('report_img/apperance.jpg', w=190, h=12, type='jpg')
+    pdf.set_font('Arial', 'B', 12)
     pdf.cell(40, 10, appearance_text.get('1.0', 'end'), ln=1)
-    pdf.set_font('Arial', 'IB', 16)
     pdf.ln(h=15)
-    pdf.cell(40, 10, '< Symptom Information >', ln=1)
-    pdf.set_font('Arial', '', 12)
+    pdf.image('report_img/symptom.jpg', w=190, h=12, type='jpg')
+    pdf.set_font('Arial', 'B', 12)
     pdf.cell(40, 10, symptom_text.get('1.0', 'end'), ln=1)
-    pdf.set_font('Arial', 'IB', 16)
     pdf.ln(h=15)
-    pdf.cell(40, 10, '< Tests Conducted >', ln=1)
-    pdf.set_font('Arial', '', 12)
+    pdf.image('report_img/tests.jpg', w=190, h=12, type='jpg')
+    pdf.set_font('Arial', 'B', 12)
     pdf.cell(40, 10, tests_text.get('1.0', 'end'), ln=1)
-    pdf.cell(40, 10, '< Failure Information >', ln=1)
-    pdf.set_font('Arial', '', 12)
+    pdf.ln(h=15)
+    pdf.image('report_img/failure.jpg', w=190, h=12, type='jpg')
+    pdf.set_font('Arial', 'B', 12)
     pdf.ln(h=15)
 
     if fb_text.get('1.0', 'end').strip() == '':
@@ -394,23 +395,20 @@ def makeform():
         pdf.cell(40, 10, 'Were parts replaced? Yes. ' + parts_text.get('1.0', 'end') + '.')
 
     pdf.ln(h=15)
-    pdf.set_font('Arial', 'IB', 16)
-    pdf.cell(40, 10, '< Analysis Steps (list) > ', ln=1)
-    pdf.set_font('Arial', '', 12)
+    pdf.image('report_img/analysis.jpg', w=190, h=12, type='jpg')
+    pdf.set_font('Arial', 'B', 12)
 
     for a in range(len(analysis_text.get('1.0', 'end').split('\n'))):
         pdf.cell(40, 10, analysis_text.get('1.0', 'end').split('\n')[count], ln=1)
         count += 1
 
-    pdf.set_font('Arial', 'IB', 16)
     pdf.ln(h=15)
-    pdf.cell(40, 10, '< What caused the failure? >', ln=1)
-    pdf.set_font('Arial', '', 12)
+    pdf.image('report_img/causeof.jpg', w=190, h=12, type='jpg')
+    pdf.set_font('Arial', 'B', 12)
     pdf.cell(40, 10, failure_text.get('1.0', 'end'), ln=1)
-    pdf.set_font('Arial', 'IB', 16)
     pdf.ln(h=15)
-    pdf.cell(40, 10, '< Summary >', ln=1)
-    pdf.set_font('Arial', '', 12)
+    pdf.image('report_img/summary.jpg', w=190, h=12, type='jpg')
+    pdf.set_font('Arial', 'B', 12)
 
     if rp.get() == True:
         sum_out = 'This unit was repaired and sent back to the customer'
@@ -423,7 +421,6 @@ def makeform():
 
     pdf.cell(40, 10, sum_out, ln=1)
     pdf.ln(h=15)
-    pdf.set_font('Arial', 'IB', 22)
     pdf.add_page()
     pdf.cell(175, 15, 'Customer Inspection Report', ln=1, align='C')
     pdf.ln(h=15)
@@ -431,32 +428,62 @@ def makeform():
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Appearance Check > ', ln=1)
     pdf.set_font('Arial', '', 12)
-    pdf.multi_cell(175, 10, apperance_check() + ' ' + c_appearance_text.get('1.0', 'end'))
-    cliping += '< Appearance Check >\n' + apperance_check() + ' ' + c_appearance_text.get('1.0', 'end')
+    pdf.multi_cell(175, 10, apperance_check())
+
+    if c_appearance_text.get('1.0', 'end').strip() == '':
+        cliping += '< Appearance Check >\n' + apperance_check() + '\n'
+    else:
+        pdf.multi_cell(175, 10, 'Additional information:\n' + c_appearance_text.get('1.0', 'end') + '\n')
+        cliping += '< Appearance Check >\n' + apperance_check() + '\nAdditional information:\n' + \
+                   c_appearance_text.get('1.0', 'end') + '\n'
 
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Operation Check > ', ln=1)
     pdf.set_font('Arial', '', 12)
-    pdf.multi_cell(175, 10, operation_check() + ' ' + c_operation_text.get('1.0', 'end'))
-    cliping += '< Operation Check >\n' + operation_check() + ' ' + c_operation_text.get('1.0', 'end')
+    pdf.multi_cell(175, 10, operation_check())
+
+    if c_operation_text.get('1.0', 'end').strip() == '':
+        cliping += '< Operation Check >\n' + operation_check() + '\n'
+    else:
+        pdf.multi_cell(175, 10, 'Additional information:\n' + c_operation_text.get('1.0', 'end') + '\n')
+        cliping += '< Operation Check >\n' + operation_check() + '\nAdditional information:\n' + \
+                   c_operation_text.get('1.0', 'end') + '\n'
 
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Internal Check > ', ln=1)
     pdf.set_font('Arial', '', 12)
-    pdf.multi_cell(175, 10, internal_check() + ' ' + c_internal_text.get('1.0', 'end'))
-    cliping += '< Internal Check >\n' + internal_check() + ' ' + c_internal_text.get('1.0', 'end')
+    pdf.multi_cell(175, 10, internal_check())
+
+    if c_internal_text.get('1.0', 'end').strip() == '':
+        cliping += '< Internal Check >\n' + internal_check() + '\n'
+    else:
+        pdf.multi_cell(175, 10, 'Additional information:\n' + c_internal_text.get('1.0', 'end') + '\n')
+        cliping += '< Internal Check >\n' + internal_check() + '\nAdditional information:\n' + \
+                   c_internal_text.get('1.0', 'end') + '\n'
 
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Suspected Cause > ', ln=1)
     pdf.set_font('Arial', '', 12)
-    pdf.multi_cell(175, 10, suspected_cause() + ' ' + c_suspected_text.get('1.0', 'end'))
-    cliping += '< Suspected Cause >\n' + suspected_cause() + ' ' + c_suspected_text.get('1.0', 'end')
+    pdf.multi_cell(175, 10, suspected_cause())
+
+    if c_suspected_text.get('1.0', 'end').strip() == '':
+        cliping += '< Suspected Cause >\n' + suspected_cause() + '\n'
+    else:
+        pdf.multi_cell(175, 10, 'Additional information:\n' + c_suspected_text.get('1.0', 'end') + '\n')
+        cliping += '< Suspected Cause >\n' + suspected_cause() + '\nAdditional information:\n' + \
+                   c_suspected_text.get('1.0', 'end') + '\n'
 
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Conclusion > ', ln=1)
     pdf.set_font('Arial', '', 12)
-    pdf.multi_cell(175, 10, conclusion() + c_conclusion_text.get('1.0', 'end'))
-    cliping += '< Conclusion >\n' + conclusion() + ' ' + c_conclusion_text.get('1.0', 'end')
+    pdf.multi_cell(175, 10, conclusion())
+
+    if c_conclusion_text.get('1.0', 'end').strip() == '':
+        cliping += '< Conclusion >\n' + conclusion() + '\n'
+    else:
+        pdf.multi_cell(175, 10, 'Additional information:\n' + c_conclusion_text.get('1.0', 'end') + '\n')
+        cliping += '< Conclusion >\n' + conclusion() + '\nAdditional information:\n' + \
+                   c_conclusion_text.get('1.0', 'end') + '\n'
 
     pdf.set_font('Arial', '', 14)
     pdf.cell(40, 10, '< Preventative Measure > ', ln=1)
@@ -1134,17 +1161,20 @@ count = 7
 
 def addBox():
     global count
-    serial_box = tk.Text(root, height=1, width=20)
-    serial_box.grid(row=count, column=1)
-    count += 1
-    serial_list.append(serial_box)
+    if count < 11:
+        serial_box = tk.Text(root, height=1, width=20)
+        serial_box.grid(row=count, column=1)
+        serial_box.bind("<Tab>", focus_next_window)
+        count += 1
+        serial_list.append(serial_box)
+    else:
+        pass
 
 
 def entries():
     sout = ''
     for s in serial_list:
         sout += s.get('1.0', 'end')
-        sout += ', '
     return sout
 
 
@@ -1217,6 +1247,12 @@ bench_label = tk.Label(text='Bench Time')
 bench_label.grid(row=1, column=4)
 bench_text = tk.Text(root, height=1, width=20)
 bench_text.grid(row=2, column=4)
+bench_text.bind("<Tab>", focus_next_window)
+
+bench_label = tk.Label(text='Error')
+bench_label.grid(row=3, column=4)
+bench_text = tk.Text(root, height=1, width=20)
+bench_text.grid(row=4, column=4)
 bench_text.bind("<Tab>", focus_next_window)
 
 his_label = tk.Label(text='RP History')
@@ -1488,9 +1524,9 @@ c_conclusion_text.grid(row=26, column=5)
 c_conclusion_text.bind("<Tab>", focus_next_window)
 
 preset_label = tk.Label(text='Presets ("clear" for reset)')
-preset_label.grid(row=30, column=5)
+preset_label.grid(row=6, column=7)
 preset_text = tk.Text(root, height=1, width=20)
-preset_text.grid(row=31, column=5)
+preset_text.grid(row=7, column=7)
 preset_text.bind("<Tab>", focus_next_window)
 
 lb = load_workbook(filename='presets.xlsx')
@@ -1500,34 +1536,34 @@ sheet_ranges = lb['Sheet']
 btn_preset_text = tk.StringVar()
 btn_preset_text.set(sheet_ranges['A1'].value)
 btn_preset1 = tk.Button(root, height=1, width=15, textvariable=btn_preset_text, command=save_exe_preset1)
-btn_preset1.grid(row=32, column=5)
+btn_preset1.grid(row=8, column=7)
 
 btn_preset2_text = tk.StringVar()
 btn_preset2_text.set(sheet_ranges['B1'].value)
 btn_preset2 = tk.Button(root, height=1, width=15, textvariable=btn_preset2_text, command=save_exe_preset2)
-btn_preset2.grid(row=33, column=5)
+btn_preset2.grid(row=9, column=7)
 
 btn_preset3_text = tk.StringVar()
 btn_preset3_text.set(sheet_ranges['C1'].value)
 btn_preset3 = tk.Button(root, height=1, width=15, textvariable=btn_preset3_text, command=save_exe_preset3)
-btn_preset3.grid(row=34, column=5)
+btn_preset3.grid(row=10, column=7)
 
 btnRead = tk.Button(root, height=1, width=15, text="Save", command=makeform)
-btnRead.grid(row=30, column=1)
+btnRead.grid(row=1, column=7)
 
-btn_example = tk.Button(root, height=1, width=15, text="RSS to AS2", command=rss_as2)
-btn_example.grid(row=31, column=1)
+btn_example = tk.Button(root, height=1, width=15, text="RSS to AS2", command='')
+btn_example.grid(row=2, column=7)
 
 btn_example = tk.Button(root, height=1, width=15, text="Example", command=example)
-btn_example.grid(row=30, column=2)
+btn_example.grid(row=3, column=7)
 
 btn_example = tk.Button(root, height=1, width=15, text="Clear All Values", command=clearexample)
-btn_example.grid(row=31, column=2)
+btn_example.grid(row=4, column=7)
 
 btn_example = tk.Button(root, height=1, width=15, text="Help", command=clearexample)
-btn_example.grid(row=32, column=2)
+btn_example.grid(row=5, column=7)
 
 angel_label = tk.Label(text='Created by Angel Davila')
-angel_label.grid(row=32, column=1)
+angel_label.grid(row=6, column=8)
 
 root.mainloop()
