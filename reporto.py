@@ -1282,38 +1282,7 @@ his_result_text = tk.Text(root, height=1, width=20)
 his_result_text.grid(row=9, column=5)
 his_result_text.bind("<Tab>", focus_next_window)
 
-c_rss = tk.Label(text='RSS Comments', fg="blue")
-c_rss.grid(row=10, column=3)
 
-appearance = tk.Label(text='Appearance Inspection (RSS)', fg="blue")
-appearance.grid(row=11, column=1)
-appearance_text = tk.Text(root, height=5, width=30)
-appearance_text.grid(row=12, column=1)
-appearance_text.bind("<Tab>", focus_next_window)
-
-symptom = tk.Label(text='Symptom Information (RSS)', fg="blue")
-symptom.grid(row=11, column=2)
-symptom_text = tk.Text(root, height=5, width=30)
-symptom_text.grid(row=12, column=2)
-symptom_text.bind("<Tab>", focus_next_window)
-
-tests = tk.Label(text='Tests Performed (RSS)', fg="blue")
-tests.grid(row=11, column=3)
-tests_text = tk.Text(root, height=5, width=30)
-tests_text.grid(row=12, column=3)
-tests_text.bind("<Tab>", focus_next_window)
-
-analysis = tk.Label(text='Analysis Steps (RSS)', fg="blue")
-analysis.grid(row=11, column=4)
-analysis_text = tk.Text(root, height=5, width=30)
-analysis_text.grid(row=12, column=4)
-analysis_text.bind("<Tab>", focus_next_window)
-
-failure = tk.Label(text='Cause of Failure (RSS)', fg="blue")
-failure.grid(row=11, column=5)
-failure_text = tk.Text(root, height=5, width=30)
-failure_text.grid(row=12, column=5)
-failure_text.bind("<Tab>", focus_next_window)
 
 ''' Check Boxes'''
 
@@ -1346,147 +1315,181 @@ bsym_cable = tk.BooleanVar()
 bsym_inout = tk.BooleanVar()
 
 c_addition = tk.Label(text='Inspection Report', fg="black")
-c_addition.grid(row=13, column=3)
+c_addition.grid(row=10, column=3)
 
 key_label = tk.Label(text='Appearance')
-key_label.grid(row=14, column=1)
+key_label.grid(row=11, column=1)
 
 app_cable = tk.Checkbutton(root, text="Cable Damage",
                            onvalue=1, offvalue=0, height=1,
                            width=25, variable=bapp_cable)
-app_cable.grid(row=15, column=1)
+app_cable.grid(row=12, column=1)
 
 app_impact = tk.Checkbutton(root, text="Impact Damage",
                             onvalue=1, offvalue=0, height=1,
                             width=25, variable=bapp_impact)
-app_impact.grid(row=16, column=1)
+app_impact.grid(row=13, column=1)
 
 app_oil = tk.Checkbutton(root, text="Oil",
                          onvalue=1, offvalue=0, height=1,
                          width=25, variable=bapp_oil)
-app_oil.grid(row=17, column=1)
+app_oil.grid(row=14, column=1)
 
 app_filter = tk.Checkbutton(root, text="Filter Glass",
                             onvalue=1, offvalue=0, height=1,
                             width=25, variable=bapp_filterglass)
-app_filter.grid(row=18, column=1)
+app_filter.grid(row=15, column=1)
 
 app_nff = tk.Checkbutton(root, text="NFF",
                          onvalue=1, offvalue=0, height=1,
                          width=25, variable=bapp_nff)
-app_nff.grid(row=19, column=1)
+app_nff.grid(row=16, column=1)
 
 key_label = tk.Label(text='Symptom')
-key_label.grid(row=14, column=2)
+key_label.grid(row=10, column=2)
 
 nopower = tk.Checkbutton(root, text="No Power",
                          onvalue=1, offvalue=0, height=1,
                          width=25, variable=bsym_nopower)
-nopower.grid(row=15, column=2)
+nopower.grid(row=12, column=2)
 
 nolaser = tk.Checkbutton(root, text="No Laser",
                          onvalue=1, offvalue=0, height=1,
                          width=25, variable=bsym_nolaser)
-nolaser.grid(row=16, column=2)
+nolaser.grid(row=13, column=2)
 
 noint = tk.Checkbutton(root, text="No Initialization",
                        onvalue=1, offvalue=0, height=1,
                        width=25, variable=bsym_noint)
-noint.grid(row=17, column=2)
+noint.grid(row=14, column=2)
 
 nocom = tk.Checkbutton(root, text="No Communication",
                        onvalue=1, offvalue=0, height=1,
                        width=25, variable=bsym_nocom)
-nocom.grid(row=18, column=2)
+nocom.grid(row=15, column=2)
 
 inout = tk.Checkbutton(root, text="Input/Output Error",
                        onvalue=1, offvalue=0, height=1,
                        width=25, variable=bsym_inout)
-inout.grid(row=19, column=2)
+inout.grid(row=16, column=2)
 
 sym_cable = tk.Checkbutton(root, text="Cable Damage",
                            onvalue=1, offvalue=0, height=1,
                            width=25, variable=bsym_cable)
-sym_cable.grid(row=20, column=2)
+sym_cable.grid(row=17, column=2)
 
 sym_nffstruct = tk.Checkbutton(root, text="NFF(Structural Damage)",
                                onvalue=1, offvalue=0, height=1,
                                width=25, variable=bsym_nffstruct)
-sym_nffstruct.grid(row=20, column=2)
+sym_nffstruct.grid(row=10, column=2)
 
 symnff = tk.Checkbutton(root, text="NFF",
                         onvalue=1, offvalue=0, height=1,
                         width=25, variable=bsym_symnff)
-symnff.grid(row=21, column=2)
+symnff.grid(row=11, column=2)
 
 key_label = tk.Label(text='Result')
-key_label.grid(row=14, column=3)
+key_label.grid(row=12, column=3)
 
 rpchk_label = tk.Checkbutton(root, text="Repaired",
                              onvalue=1, offvalue=0, height=1,
                              width=25, variable=rp)
-rpchk_label.grid(row=15, column=3)
+rpchk_label.grid(row=13, column=3)
 
 nrpchk_label = tk.Checkbutton(root, text="Not repaired",
                               onvalue=1, offvalue=0, height=1,
                               width=25, variable=nrp)
-nrpchk_label.grid(row=16, column=3)
+nrpchk_label.grid(row=14, column=3)
 
 rtchk_label = tk.Checkbutton(root, text="Returned (NFF)",
                              onvalue=1, offvalue=0, height=1,
                              width=25, variable=rt)
-rtchk_label.grid(row=17, column=3)
+rtchk_label.grid(row=15, column=3)
 
 kjchk_label = tk.Checkbutton(root, text="Sent to KJ(RRC)",
                              onvalue=1, offvalue=0, height=1,
                              width=25, variable=kj)
-kjchk_label.grid(row=18, column=3)
+kjchk_label.grid(row=16, column=3)
 
 key_label = tk.Label(text=' Suspected Cause/Preventative Measures ')
-key_label.grid(row=14, column=4)
+key_label.grid(row=10, column=4)
 
 key_label = tk.Label(text=' Suspected Cause/Preventative Measures ')
-key_label.grid(row=14, column=5)
+key_label.grid(row=10, column=5)
 
 hot_swap = tk.Checkbutton(root, text="Hot Swap",
                           onvalue=1, offvalue=0, height=1,
                           width=25, variable=bhotswap)
-hot_swap.grid(row=15, column=4)
+hot_swap.grid(row=11, column=4)
 
 noise = tk.Checkbutton(root, text="Electrical Noise",
                        onvalue=1, offvalue=0, height=1,
                        width=25, variable=bnoise)
-noise.grid(row=16, column=4)
+noise.grid(row=12, column=4)
 
 vibration = tk.Checkbutton(root, text="Vibration",
                            onvalue=1, offvalue=0, height=1,
                            width=25, variable=bvibration)
-vibration.grid(row=17, column=4)
+vibration.grid(row=13, column=4)
 
 surge = tk.Checkbutton(root, text="Electrical Surge",
                        onvalue=1, offvalue=0, height=1,
                        width=25, variable=bsurge)
-surge.grid(row=18, column=4)
+surge.grid(row=14, column=4)
 
 heat = tk.Checkbutton(root, text="Heat",
                       onvalue=1, offvalue=0, height=1,
                       width=25, variable=bheat)
-heat.grid(row=19, column=4)
+heat.grid(row=15, column=4)
 
 cable = tk.Checkbutton(root, text="Cable Damage",
                        onvalue=1, offvalue=0, height=1,
                        width=25, variable=bcable)
-cable.grid(row=15, column=5)
+cable.grid(row=11, column=5)
 
 impact = tk.Checkbutton(root, text="Impact",
                         onvalue=1, offvalue=0, height=1,
                         width=25, variable=bimpact)
-impact.grid(row=16, column=5)
+impact.grid(row=12, column=5)
 
 nff = tk.Checkbutton(root, text="NFF",
                      onvalue=1, offvalue=0, height=1,
                      width=25, variable=bnff)
-nff.grid(row=17, column=5)
+nff.grid(row=13, column=5)
+
+c_rss = tk.Label(text='RSS Comments', fg="blue")
+c_rss.grid(row=18, column=3)
+
+appearance = tk.Label(text='Appearance Inspection (RSS)', fg="blue")
+appearance.grid(row=19, column=1)
+appearance_text = tk.Text(root, height=5, width=30)
+appearance_text.grid(row=20, column=1)
+appearance_text.bind("<Tab>", focus_next_window)
+
+symptom = tk.Label(text='Symptom Information (RSS)', fg="blue")
+symptom.grid(row=19, column=2)
+symptom_text = tk.Text(root, height=5, width=30)
+symptom_text.grid(row=20, column=2)
+symptom_text.bind("<Tab>", focus_next_window)
+
+tests = tk.Label(text='Tests Performed (RSS)', fg="blue")
+tests.grid(row=19, column=3)
+tests_text = tk.Text(root, height=5, width=30)
+tests_text.grid(row=20, column=3)
+tests_text.bind("<Tab>", focus_next_window)
+
+analysis = tk.Label(text='Analysis Steps (RSS)', fg="blue")
+analysis.grid(row=19, column=4)
+analysis_text = tk.Text(root, height=5, width=30)
+analysis_text.grid(row=20, column=4)
+analysis_text.bind("<Tab>", focus_next_window)
+
+failure = tk.Label(text='Cause of Failure (RSS)', fg="blue")
+failure.grid(row=19, column=5)
+failure_text = tk.Text(root, height=5, width=30)
+failure_text.grid(row=20, column=5)
+failure_text.bind("<Tab>", focus_next_window)
+
 
 '''Form'''
 
@@ -1524,9 +1527,9 @@ c_conclusion_text.grid(row=26, column=5)
 c_conclusion_text.bind("<Tab>", focus_next_window)
 
 preset_label = tk.Label(text='Presets ("clear" for reset)')
-preset_label.grid(row=6, column=7)
+preset_label.grid(row=33, column=4)
 preset_text = tk.Text(root, height=1, width=20)
-preset_text.grid(row=7, column=7)
+preset_text.grid(row=34, column=4)
 preset_text.bind("<Tab>", focus_next_window)
 
 lb = load_workbook(filename='presets.xlsx')
@@ -1536,34 +1539,31 @@ sheet_ranges = lb['Sheet']
 btn_preset_text = tk.StringVar()
 btn_preset_text.set(sheet_ranges['A1'].value)
 btn_preset1 = tk.Button(root, height=1, width=15, textvariable=btn_preset_text, command=save_exe_preset1)
-btn_preset1.grid(row=8, column=7)
+btn_preset1.grid(row=33, column=5)
 
 btn_preset2_text = tk.StringVar()
 btn_preset2_text.set(sheet_ranges['B1'].value)
 btn_preset2 = tk.Button(root, height=1, width=15, textvariable=btn_preset2_text, command=save_exe_preset2)
-btn_preset2.grid(row=9, column=7)
+btn_preset2.grid(row=34, column=5)
 
 btn_preset3_text = tk.StringVar()
 btn_preset3_text.set(sheet_ranges['C1'].value)
 btn_preset3 = tk.Button(root, height=1, width=15, textvariable=btn_preset3_text, command=save_exe_preset3)
-btn_preset3.grid(row=10, column=7)
+btn_preset3.grid(row=35, column=5)
 
 btnRead = tk.Button(root, height=1, width=15, text="Save", command=makeform)
-btnRead.grid(row=1, column=7)
-
-btn_example = tk.Button(root, height=1, width=15, text="RSS to AS2", command='')
-btn_example.grid(row=2, column=7)
+btnRead.grid(row=33, column=1)
 
 btn_example = tk.Button(root, height=1, width=15, text="Example", command=example)
-btn_example.grid(row=3, column=7)
+btn_example.grid(row=34, column=1)
 
 btn_example = tk.Button(root, height=1, width=15, text="Clear All Values", command=clearexample)
-btn_example.grid(row=4, column=7)
+btn_example.grid(row=33, column=2)
 
 btn_example = tk.Button(root, height=1, width=15, text="Help", command=clearexample)
-btn_example.grid(row=5, column=7)
+btn_example.grid(row=34, column=2)
 
 angel_label = tk.Label(text='Created by Angel Davila')
-angel_label.grid(row=6, column=8)
+angel_label.grid(row=35, column=1)
 
 root.mainloop()
