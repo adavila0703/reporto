@@ -1,9 +1,37 @@
 import tkinter as tk
 from tkinter.messagebox import showinfo
+from presets.clear_example import clearexample
+from presets.examples import example
+from presets.preset_save import save_exe_preset1, save_exe_preset2, save_exe_preset3
+from reportgen.gen_report import form
+from openpyxl import load_workbook
 
 serial_list = []
+count = 7
 
-def addBox():
+"""test"""
+def entries():
+    """
+    Summary: Stores SN entries
+
+    Parameters: None
+
+    Return: A string of multiple serials
+    """
+    sout = ''
+    for s in serial_list:
+        sout += s.get('1.0', 'end')
+    return sout
+
+
+def add_box():
+    """
+    Summary: Adds another box to the list for SN inputs
+
+    Parameters: None
+
+    Return: None
+    """
     global count
     if count < 11:
         serial_box = tk.Text(root, height=1, width=20)
@@ -16,15 +44,36 @@ def addBox():
 
 
 def focus_next_window(event):
+    """
+    Summary: Allows you to use TAB to switch to the next window.
+
+    Parameters: (event)
+
+    Return: None
+    """
     event.widget.tk_focusNext().focus()
     return "break"
 
 
 def fileopen():
+    """
+    Summary: A warning to alert user that the file trying modify is open.
+
+    Parameters: None
+
+    Return: Warning information
+    """
     showinfo('Warning!', 'You have the file open, close it before save.')
 
 
 def warning(wrds):
+    """
+    Summary: A warning to alert user that the file trying modify is open.
+
+    Parameters: None
+
+    Return: Warning information
+    """
     showinfo('Window', 'You are missing:\n' + wrds)
 
 
@@ -59,8 +108,8 @@ serial_label.grid(row=5, column=1)
 # serial_text = tk.Text(root, height=1, width=20)
 # serial_text.grid(row=6, column=1)
 # serial_text.bind("<Tab>", focus_next_window)
-addBox()
-serial_text = tk.Button(root, text='Add Serial Box', fg="Red", command=addBox)
+add_box()
+serial_text = tk.Button(root, text='Add Serial Box', fg="Red", command=add_box)
 serial_text.grid(row=6, column=1)
 
 key_label = tk.Label(text='Keycode')
@@ -137,7 +186,6 @@ his_result.grid(row=8, column=5)
 his_result_text = tk.Text(root, height=1, width=20)
 his_result_text.grid(row=9, column=5)
 his_result_text.bind("<Tab>", focus_next_window)
-
 
 rp = tk.BooleanVar()
 nrp = tk.BooleanVar()
@@ -401,7 +449,7 @@ btn_preset3_text.set(sheet_ranges['C1'].value)
 btn_preset3 = tk.Button(root, height=1, width=15, textvariable=btn_preset3_text, command=save_exe_preset3)
 btn_preset3.grid(row=35, column=5)
 
-btnRead = tk.Button(root, height=1, width=15, text="Save", command=form_create)
+btnRead = tk.Button(root, height=1, width=15, text="Save", command=form)
 btnRead.grid(row=33, column=1)
 
 btn_example = tk.Button(root, height=1, width=15, text="Example", command=example)
