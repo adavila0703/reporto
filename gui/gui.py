@@ -3,18 +3,14 @@ from tkinter.messagebox import showinfo
 from presets.clear_example import clearexample
 from presets.examples import example
 from presets.preset_save import save_exe_preset1, save_exe_preset2, save_exe_preset3
-from reportgen.gen_report import form
+from reportgen.gen_report import create_form
 from openpyxl import load_workbook
 
-serial_list = []
-count = 7
 
-"""test"""
 def entries():
-    """
-    Summary: Stores SN entries
+    """Stores SN entries
 
-    Parameters: None
+    Args: None
 
     Return: A string of multiple serials
     """
@@ -25,12 +21,13 @@ def entries():
 
 
 def add_box():
-    """
-    Summary: Adds another box to the list for SN inputs
+    """Adds another box to the list for SN inputs
 
-    Parameters: None
+    Args:
+        no value
 
-    Return: None
+    Return:
+        no value
     """
     global count
     if count < 11:
@@ -44,47 +41,71 @@ def add_box():
 
 
 def focus_next_window(event):
-    """
-    Summary: Allows you to use TAB to switch to the next window.
+    """Allows you to use TAB to switch to the next window in the user interface.
 
-    Parameters: (event)
+    Args:
+        event : object
+            object of the current tkinter session
 
-    Return: None
+    Return:
+        no value
     """
     event.widget.tk_focusNext().focus()
     return "break"
 
 
 def fileopen():
-    """
-    Summary: A warning to alert user that the file trying modify is open.
+    """A warning to alert user that the file trying modify is open.
 
-    Parameters: None
+    Args:
+        no values
 
-    Return: Warning information
+    Return:
+        Warning information
     """
     showinfo('Warning!', 'You have the file open, close it before save.')
 
 
 def warning(wrds):
-    """
-    Summary: A warning to alert user that the file trying modify is open.
+    """A warning to alert user that the file trying modify is open.
 
-    Parameters: None
+    Args:
+        wrds : string
+            A string that represents which values are missing in your report.
 
-    Return: Warning information
+    Return:
+        Warning of which values are missing
     """
     showinfo('Window', 'You are missing:\n' + wrds)
 
 
 def copy_message():
+    """Function to generate the user interface.
+
+    Args:
+        no values
+
+    Return:
+        info on a successful generation of your report
+    """
     showinfo('Success!', 'Your inspection report has been copied to your clipboard.\n(CTL+V to paste in AS2)')
 
 
 def too_many_char(incoming):
+    """Function to generate the user interface.
+
+    Args:
+        incoming : int
+            a count of the amount of characters you are trying to input
+
+    Return:
+        warning on the use of too many characters
+    """
     showinfo('Warning!', f'Preset character limit is 18,\nyou have {incoming}')
 
 
+serial_list = []
+count = 7
 root = tk.Tk()
 w, h = root.winfo_screenwidth(), root.winfo_screenheight()
 root.geometry("%dx%d+0+0" % (w, h))
@@ -449,7 +470,7 @@ btn_preset3_text.set(sheet_ranges['C1'].value)
 btn_preset3 = tk.Button(root, height=1, width=15, textvariable=btn_preset3_text, command=save_exe_preset3)
 btn_preset3.grid(row=35, column=5)
 
-btnRead = tk.Button(root, height=1, width=15, text="Save", command=form)
+btnRead = tk.Button(root, height=1, width=15, text="Save", command=create_form)
 btnRead.grid(row=33, column=1)
 
 btn_example = tk.Button(root, height=1, width=15, text="Example", command=example)

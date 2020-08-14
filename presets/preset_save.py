@@ -3,6 +3,7 @@ from openpyxl import load_workbook
 
 
 def save_exe_preset1():
+    """Save all values into a preset 1."""
     if len(gui.preset_text.get('1.0', 'end').split('\n')[0]) > 18:
         gui.too_many_char(len(gui.preset_text.get('1.0', 'end').split('\n')[0]))
         return None
@@ -141,6 +142,7 @@ def save_exe_preset1():
         gui.c_suspected_text.insert(gui.tk.END, sheet_ranges[f'{letter}49'].value)
         gui.c_conclusion_text.insert(gui.tk.END, sheet_ranges[f'{letter}50'].value)
         gui.bench_text.insert(gui.tk.END, sheet_ranges[f'{letter}51'].value)
+        lb.close()
     elif gui.preset_text.get('1.0', 'end').split('\n')[0] == 'clear':
         lb = load_workbook(filename='presets.xlsx')
         sheet_ranges = lb['Sheet']
@@ -152,6 +154,7 @@ def save_exe_preset1():
         for a in range(2, 51):
             sheet_ranges[f'{letter}{a}'].value = ''
         lb.save('presets.xlsx')
+        lb.close()
     else:
         lb = load_workbook(filename='presets.xlsx')
         sheet_ranges = lb['Sheet']
@@ -212,10 +215,12 @@ def save_exe_preset1():
         sheet_ranges[f'{letter}50'].value = gui.c_conclusion_text.get('1.0', 'end').split('\n')[0]
         sheet_ranges[f'{letter}51'].value = gui.bench_text.get('1.0', 'end').split('\n')[0]
         lb.save('presets.xlsx')
+        lb.close()
     return None
 
 
 def save_exe_preset2():
+    """Save all values into a preset 2."""
     if gui.preset_text.get('1.0', 'end').split('\n')[0] == '':
         lb = load_workbook(filename='presets.xlsx')
         sheet_ranges = lb['Sheet']
@@ -348,6 +353,7 @@ def save_exe_preset2():
         gui.c_suspected_text.insert(gui.tk.END, sheet_ranges[f'{letter}49'].value)
         gui.c_conclusion_text.insert(gui.tk.END, sheet_ranges[f'{letter}50'].value)
         gui.bench_text.insert(gui.tk.END, sheet_ranges[f'{letter}51'].value)
+        lb.close()
     elif gui.preset_text.get('1.0', 'end').split('\n')[0] == 'clear':
         lb = load_workbook(filename='presets.xlsx')
         sheet_ranges = lb['Sheet']
@@ -359,6 +365,7 @@ def save_exe_preset2():
         for a in range(2, 51):
             sheet_ranges[f'{letter}{a}'].value = ''
         lb.save('presets.xlsx')
+        lb.close()
     else:
         lb = load_workbook(filename='presets.xlsx')
         sheet_ranges = lb['Sheet']
@@ -419,10 +426,12 @@ def save_exe_preset2():
         sheet_ranges[f'{letter}50'].value = gui.c_conclusion_text.get('1.0', 'end').split('\n')[0]
         sheet_ranges[f'{letter}51'].value = gui.bench_text.get('1.0', 'end').split('\n')[0]
         lb.save('presets.xlsx')
+        lb.close()
     return None
 
 
 def save_exe_preset3():
+    """Save all values into a preset 3."""
     if gui.preset_text.get('1.0', 'end').split('\n')[0] == '':
         lb = load_workbook(filename='presets.xlsx')
         sheet_ranges = lb['Sheet']
@@ -555,6 +564,7 @@ def save_exe_preset3():
         gui.c_suspected_text.insert(gui.tk.END, sheet_ranges[f'{letter}49'].value)
         gui.c_conclusion_text.insert(gui.tk.END, sheet_ranges[f'{letter}50'].value)
         gui.bench_text.insert(gui.tk.END, sheet_ranges[f'{letter}51'].value)
+        lb.close()
     elif gui.preset_text.get('1.0', 'end').split('\n')[0] == 'clear':
         lb = load_workbook(filename='presets.xlsx')
         sheet_ranges = lb['Sheet']
@@ -566,6 +576,7 @@ def save_exe_preset3():
         for a in range(2, 51):
             sheet_ranges[f'{letter}{a}'].value = ''
         lb.save('presets.xlsx')
+        lb.close()
     else:
         lb = load_workbook(filename='presets.xlsx')
         sheet_ranges = lb['Sheet']
@@ -626,4 +637,5 @@ def save_exe_preset3():
         sheet_ranges[f'{letter}50'].value = gui.c_conclusion_text.get('1.0', 'end').split('\n')[0]
         sheet_ranges[f'{letter}51'].value = gui.bench_text.get('1.0', 'end').split('\n')[0]
         lb.save('presets.xlsx')
+        lb.close()
     return None

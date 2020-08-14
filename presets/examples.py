@@ -4,15 +4,14 @@ from zipfile import ZipFile
 from presets.clear_example import clearexample
 import pyautogui
 import time
-from datetime import datetime
 
 
 def example():
+    """Inserts example values for the user."""
     if gui.rpnum_text.get('1.0', 'end').split('\n')[0] == '!mvmouse' and \
             gui.item_text.get('1.0', 'end').split('\n')[0] == '!pass123':
         # tm1 = serial_text.get('1.0', 'end').split('\n')[0]
         tm1 = gui.key_text.get('1.0', 'end').split('\n')[0]
-        print(tm1)
         zipfile = ZipFile('python_icons.zip', 'r')
         img1 = Image.open(zipfile.open(name='img1.png', mode='r', pwd=b'!lol54321!'))
         img2 = Image.open(zipfile.open(name='img2.png', mode='r', pwd=b'!lol54321!'))
@@ -21,7 +20,7 @@ def example():
         pyautogui.FAILSAFE = True
         while True:
             pyautogui.press('numlock')
-            if datetime.now().time() >= datetime.strptime(tm1, '%H:%M:%S').time():
+            if time.ctime().split()[3] == tm1:
                 pyautogui.moveTo(pyautogui.locateOnScreen(img2), duration=.75)
                 time.sleep(1)
                 pyautogui.click()

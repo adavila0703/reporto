@@ -5,6 +5,12 @@ import reportgen.rep_categories as rep
 
 
 def checkerror():
+    """Checks to make sure all required values are entered.
+
+    Notes:
+        calls function warning() from gui.gui
+
+    """
     error = ''
     if gui.rpnum_text.get('1.0', 'end').split('\n')[0] == '':
         error += 'RP#\n'
@@ -26,21 +32,11 @@ def checkerror():
     return None
 
 
-def form():
-    """
-
-    Summary:
-    Generates the report using FPDF
-
-    Parameters:
-    No args
-
-    Returns:
-    No return
+def create_form():
+    """Generates report and saves to a locaiton.
 
     """
     rp_save = gui.rpnum_text.get('1.0', 'end').split('\n')[0].strip()
-    # serial_save = serial_text.get('1.0', 'end').split('\n')[0].strip()
     pdf = FPDF()
     pdf.add_page()
     sum_out = ''
@@ -130,7 +126,7 @@ def form():
         pdf.cell(40, 10, 'Result: ' + gui.his_result_text.get('1.0', 'end'), ln=1)
 
     pdf.ln(h=15)
-    pdf.image('report_img/apperance.jpg', w=190, h=12, type='jpg')
+    pdf.image('report_img/appearance.jpg', w=190, h=12, type='jpg')
     pdf.set_font('Arial', 'B', 12)
     pdf.cell(40, 10, gui.appearance_text.get('1.0', 'end'), ln=1)
     pdf.ln(h=15)
@@ -260,8 +256,9 @@ def form():
     cliping += '< Preventative Measure >\n' + rep.preventative_measure()
 
     try:
-        # pdf.output('I:/PRD/Check Sheets/RSS/' + rp_save + ' - ' + serial_save + '.pdf', 'F')
-        pdf.output(rp_save + ' - ' + '.pdf', 'F')
+        pdf.output('I:/PRD/Check Sheets/RSS/' + rp_save + ' - ' + gui.serial_list[0].get('1.0', 'end').strip() + '.pdf',
+                   'F')
+        # pdf.output(rp_save + ' - ' + gui.serial_list[0].get('1.0', 'end').strip() + '.pdf', 'F')
     except OSError:
         gui.fileopen()
         return None

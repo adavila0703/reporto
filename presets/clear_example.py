@@ -2,6 +2,7 @@ import gui.gui as gui
 
 
 def clearexample():
+    """Clears the example values that are stored to help user understand UI."""
     gui.rpnum_text.delete('1.0', 'end')
     gui.item_text.delete('1.0', 'end')
     # serial_text.delete('1.0', 'end')

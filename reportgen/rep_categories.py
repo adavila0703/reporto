@@ -2,6 +2,11 @@ import gui.gui as gui
 
 
 def apperance_check():
+    """Checks which values of appearance is relevant and stores it in report/pyperclip
+
+    Return:
+        combined string value
+    """
     str_out = 'After a thorough external visual inspection, the following was found:\n'
 
     if gui.bapp_nff.get():
@@ -18,6 +23,11 @@ def apperance_check():
 
 
 def operation_check():
+    """Checks which values of operation is relevant and stores it in report/pyperclip
+
+        Return:
+            combined string value
+    """
     str_out = 'The following was found during a full function test:\n'
     if gui.bsym_nocom.get():
         str_out += '-Unit communication was abnormal\n'
@@ -41,6 +51,11 @@ def operation_check():
 
 
 def internal_check():
+    """Checks which values of internal is relevant and stores it in report/pyperclip
+
+        Return:
+            combined string value
+    """
     str_out = ''
     if gui.structure_text.get('1.0', 'end').split('\n')[0] != '' or gui.fb_text.get('1.0', 'end').split('\n')[0] != '' \
             or gui.comp_text.get('1.0', 'end').split('\n')[0] != '':
@@ -73,6 +88,11 @@ def internal_check():
 
 
 def suspected_cause():
+    """Checks which values of cause is relevant and stores it in report/pyperclip
+
+        Return:
+            combined string value
+    """
     str_out = 'The unit failure was likely caused by the following possibilities:\n'
     if gui.bhotswap.get():
         str_out += '- Electrical component damage due to hot swap.\n'
@@ -94,6 +114,11 @@ def suspected_cause():
 
 
 def conclusion():
+    """Checks which values of conclusion is relevant and stores it in report/pyperclip
+
+        Return:
+            combined string value
+    """
     str_out = ''
     if gui.rp.get():
         str_out = 'To bring this unit back to full functionality, the unit will be repaired and tested to ' \
@@ -114,6 +139,11 @@ def conclusion():
 
 
 def preventative_measure():
+    """Checks which values of preventative measures is relevant and stores it in report/pyperclip
+
+        Return:
+            combined string value
+    """
     str_out = ''
     if gui.bhotswap.get():
         str_out += 'How swap damage could occur when the units power is not fully cycled off. Please make' \

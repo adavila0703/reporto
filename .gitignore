@@ -123,4 +123,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
 .idea
+report_img/
+design.docx
+python_icons.rar
+presets.xlsx
